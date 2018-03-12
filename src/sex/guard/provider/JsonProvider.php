@@ -71,14 +71,13 @@ class JsonProvider implements Provider
 
 
 	/**
-	 * @param  string $name
 	 * @param  Region $region
 	 *
 	 * @return JsonProvider
 	 */
-	function setRegion( string $name, Region $region ): Provider
+	function setRegion( Region $region ): Provider
 	{
-		$name = strtolower($name);
+		$name = $region->getName();
 		$data = $region->toData();
 
 		$this->region_data->set($name, $data);

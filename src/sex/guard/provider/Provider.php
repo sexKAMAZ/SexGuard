@@ -38,12 +38,11 @@ interface Provider
 
 
 	/**
-	 * @param  string $name
 	 * @param  Region $region
 	 *
 	 * @return JsonProvider
 	 */
-	function setRegion( string $name, Region $region ): Provider;
+	function setRegion( Region $region ): Provider;
 
 
 	/**

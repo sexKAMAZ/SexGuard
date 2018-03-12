@@ -41,7 +41,9 @@ class FlagList
 
 
 	/**
-	 * @param mixed[]
+	 * @param  mixed[]
+	 *
+	 * @return FlagList|null
 	 */
 	static function fromData( array $data )
 	{
