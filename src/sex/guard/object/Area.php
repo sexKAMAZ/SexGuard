@@ -26,6 +26,11 @@ class Area // maybe extend AxisAlignedBB?
 	const INDEX_AREA_MINVECTOR = 'min_vector';
 	const INDEX_AREA_MAXVECTOR = 'max_vector';
 
+	const SIDE_NORTH_EAST = 0;
+	const SIDE_SOUTH_EAST = 1;
+	const SIDE_SOUTH_WEST = 2;
+	const SIDE_NORTH_WEST = 3;
+
 
 	/**
 	 * @param  Selector $selector
@@ -190,6 +195,54 @@ class Area // maybe extend AxisAlignedBB?
 
 
 	/**
+	 * @return int
+	 */
+	function getLevelSide( ): int
+	{
+		$min = $this->getMinVector();
+		$max = $this->getMaxVector();
+
+		$x = round(($min->getX() + $max->getX()) / 2);
+		$z = round(($min->getZ() + $max->getZ()) / 2);
+
+		$vector = new Vector3($x, 0, $z);
+
+		switch( true )
+		{
+			case $vector->getX() > 0 and 0 > $vector->getZ(): return self::SIDE_NORTH_EAST;
+			case $vector->getX() > 0 and 0 < $vector->getZ(): return self::SIDE_SOUTH_EAST;
+			case $vector->getX() < 0 and 0 < $vector->getZ(): return self::SIDE_SOUTH_WEST;
+			case $vector->getX() < 0 and 0 > $vector->getZ(): return self::SIDE_NORTH_WEST;
+		}
+
+		return self::SIDE_NORTH_EAST;
+	}
+
+
+	/**
+	 * @param  bool $ignore_y
+	 *
+	 * @return int
+	 */
+	function getSize( bool $ignore_y = false ): int
+	{
+		$min = $this->getMinVector();
+		$max = $this->getMaxVector();
+
+		$x = [ $min->getX(), $max->getX() ];
+		$y = [ $min->getY(), $max->getY() ];
+		$z = [ $min->getZ(), $max->getZ() ];
+
+		if( $ignore_y )
+		{
+			$y = [ 0, 1 ];
+		}
+		
+		return ($x[1] - $x[0]) * ($y[1] - $y[0]) * ($z[1] - $z[0]);
+	}
+
+
+	/**
 	 * @return Position
 	 */
 	function getRandomPosition( ): Position
@@ -217,29 +270,6 @@ class Area // maybe extend AxisAlignedBB?
 			
 			return $position;
 		}
-	}
-
-
-	/**
-	 * @param  bool $ignore_y
-	 *
-	 * @return int
-	 */
-	function getSize( bool $ignore_y = false ): int
-	{
-		$min = $this->getMinVector();
-		$max = $this->getMaxVector();
-
-		$x = [ $min->getX(), $max->getX() ];
-		$y = [ $min->getY(), $max->getY() ];
-		$z = [ $min->getZ(), $max->getZ() ];
-
-		if( $ignore_y )
-		{
-			$y = [ 0, 1 ];
-		}
-		
-		return ($x[1] - $x[0]) * ($y[1] - $y[0]) * ($z[1] - $z[0]);
 	}
 
 
