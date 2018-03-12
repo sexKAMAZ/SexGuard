@@ -20,11 +20,36 @@ use pocketmine\math\Vector3;
 use pocketmine\Server;
 
 
-class Area
+class Area // maybe extend AxisAlignedBB?
 {
 	const INDEX_AREA_LEVEL     = 'level';
 	const INDEX_AREA_MINVECTOR = 'min_vector';
 	const INDEX_AREA_MAXVECTOR = 'max_vector';
+
+
+	/**
+	 * @param  Selector $selector
+	 *
+	 * @return Area|null
+	 */
+	static function fromSelector( Selector $selector )
+	{
+		$first = $selector->getFirstPosition();
+
+		if( !isset($first) )
+		{
+			return null;
+		}
+
+		$second = $selector->getFirstPosition();
+
+		if( !isset($second) )
+		{
+			return null;
+		}
+
+		return self::fromPosition($first, $second);
+	}
 
 
 	/**
@@ -192,6 +217,81 @@ class Area
 			
 			return $position;
 		}
+	}
+
+
+	/**
+	 * @param  bool $ignore_y
+	 *
+	 * @return int
+	 */
+	function getSize( bool $ignore_y = false ): int
+	{
+		$min = $this->getMinVector();
+		$max = $this->getMaxVector();
+
+		$x = [ $min->getX(), $max->getX() ];
+		$y = [ $min->getY(), $max->getY() ];
+		$z = [ $min->getZ(), $max->getZ() ];
+
+		if( $ignore_y )
+		{
+			$y = [ 0, 1 ];
+		}
+		
+		return ($x[1] - $x[0]) * ($y[1] - $y[0]) * ($z[1] - $z[0]);
+	}
+
+
+	/**
+	 * @param  Area $area
+	 *
+	 * @return bool
+	 */
+	function intersectsWith( Area $area ): bool
+	{
+		if(
+			$area->getMaxVector()->getX() > $this->getMinVector()->getX() and
+			$area->getMinVector()->getX() < $this->getMaxVector()->getX()
+		) {
+			if(
+				$area->getMaxVector()->getY() > $this->getMinVector()->getY() and
+				$area->getMinVector()->getY() < $this->getMaxVector()->getY()
+			) {
+				return
+					$area->getMaxVector()->getZ() > $this->getMinVector()->getZ() and
+					$area->getMinVector()->getZ() < $this->getMaxVector()->getZ();
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * @param  Vector3 $vector
+	 *
+	 * @return bool
+	 */
+	function isVectorInside( Vector3 $vector ): bool
+	{
+		if(
+			$vector->getX() <= $this->getMinVector()->getX() or
+			$vector->getX() >= $this->getMaxVector()->getX()
+		) {
+			return false;
+		}
+
+		if(
+			$vector->getY() <= $this->getMinVector()->getY() or
+			$vector->getY() >= $this->getMaxVector()->getY()
+		) {
+			return false;
+		}
+
+		return
+			$vector->getZ() > $this->getMinVector()->getZ() and
+			$vector->getZ() < $this->getMaxVector()->getZ();
 	}
 
 
