@@ -64,7 +64,7 @@ class Selector
 	 *
 	 * @return Selector
 	 */
-	function setFirstPosition( Position $position ): self
+	function setFirstPosition( Position $position ): Selector
 	{
 		$this->first_position = $position;
 
@@ -86,7 +86,7 @@ class Selector
 	 *
 	 * @return Selector
 	 */
-	function setSecondPosition( Position $position ): self
+	function setSecondPosition( Position $position ): Selector
 	{
 		$this->second_position = $position;
 
@@ -97,7 +97,7 @@ class Selector
 	/**
 	 * @return Selector
 	 */
-	function clear( ): self
+	function clear( ): Selector
 	{
 		unset($this->first_position, $this->second_position);
 

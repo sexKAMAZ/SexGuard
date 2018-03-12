@@ -160,7 +160,7 @@ class Region extends Area
 	 *
 	 * @return Region
 	 */
-	function setName( string $name ): self
+	function setName( string $name ): Region
 	{
 		$this->name = strtolower($name);
 
@@ -182,7 +182,7 @@ class Region extends Area
 	 *
 	 * @return Region
 	 */
-	function setOwner( string $nick ): self
+	function setOwner( string $nick ): Region
 	{
 		$this->owner = strtolower($nick);
 

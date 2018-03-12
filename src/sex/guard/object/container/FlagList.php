@@ -113,7 +113,7 @@ class FlagList
 	/**
 	 * @param  string $flag
 	 *
-	 * @return MemberList
+	 * @return bool
 	 */
 	function get( string $flag ): bool
 	{
@@ -134,7 +134,7 @@ class FlagList
 	 *
 	 * @return FlagList
 	 */
-	function set( string $flag, bool $value ): self
+	function set( string $flag, bool $value ): FlagList
 	{
 		$flag = strtolower($flag);
 
@@ -150,7 +150,7 @@ class FlagList
 	/**
 	 * @param  string $flag
 	 *
-	 * @return MemberList
+	 * @return bool
 	 */
 	function exists( string $flag ): bool
 	{

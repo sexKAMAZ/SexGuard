@@ -19,7 +19,9 @@ class MemberList
 
 
 	/**
-	 * @param mixed[]
+	 * @param  mixed[]
+	 *
+	 * @return MemberList|null
 	 */
 	static function fromData( array $data )
 	{
@@ -71,7 +73,7 @@ class MemberList
 	 *
 	 * @return MemberList
 	 */
-	function add( string $nick ): self
+	function add( string $nick ): MemberList
 	{
 		$this->list[] = strtolower($nick);
 
@@ -84,9 +86,15 @@ class MemberList
 	 *
 	 * @return MemberList
 	 */
-	function remove( string $nick ): self
+	function remove( string $nick ): MemberList
 	{
-		$this->list[] = strtolower($nick);
+		$nick = strtolower($nick);
+		$key  = array_search($nick, $this->list);
+
+		if( $key !== false )
+		{
+			unset($this->list[$key]);
+		}
 
 		return $this;
 	}
@@ -101,6 +109,6 @@ class MemberList
 	{
 		$nick = strtolower($nick);
 
-		return isset($this->list[$nick]);
+		return array_search($nick, $this->list) ? true : false;
 	}
 }
