@@ -13,6 +13,9 @@
  *         https://t.me/sex_kamaz
  *
  */
+use sex\guard\object\Selector;
+
+
 use pocketmine\level\Position;
 use pocketmine\level\Level;
 
@@ -195,17 +198,27 @@ class Area // maybe extend AxisAlignedBB?
 
 
 	/**
-	 * @return int
+	 * @return Vector3
 	 */
-	function getLevelSide( ): int
+	function getCenterVector( ): Vector3
 	{
 		$min = $this->getMinVector();
 		$max = $this->getMaxVector();
 
 		$x = round(($min->getX() + $max->getX()) / 2);
+		$y = round(($min->getX() + $max->getX()) / 2);
 		$z = round(($min->getZ() + $max->getZ()) / 2);
 
-		$vector = new Vector3($x, 0, $z);
+		return new Vector3($x, $y, $z);
+	}
+
+
+	/**
+	 * @return int
+	 */
+	function getLevelSide( ): int
+	{
+		$vector = $this->getCenterVector();
 
 		switch( true )
 		{
