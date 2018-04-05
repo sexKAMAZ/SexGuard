@@ -78,6 +78,17 @@ class SexQLite
 
 
 	/**
+	 * @param  string $sql
+	 *
+	 * @return SQLite3Result
+	 */
+	static function query( SQLite3 $link, string $sql ): SQLite3Result
+	{
+		return $link->query($sql);
+	}
+
+
+	/**
 	 * @param  SQLite3 $link
 	 * @param  string  $sql
 	 *
@@ -116,7 +127,7 @@ class SexQLite
 	 */
 	static function execute( SQLite3Stmt $statement ): SQLite3Result
 	{
-		return $statement->prepare($statement);
+		return $statement->execute();
 	}
 
 

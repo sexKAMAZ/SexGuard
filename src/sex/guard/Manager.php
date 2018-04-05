@@ -82,7 +82,6 @@ class Manager extends PluginBase
 	 * | |  | | (_) | | | | (_) | (_) |  __/ |
 	 * |_|  |_|\__,_|_| |_|\__,_|\__, |\___|_|
 	 *                           /___/
-	 *
 	 */
 	function onEnable( )
 	{
@@ -205,7 +204,7 @@ class Manager extends PluginBase
 
 	/**
 	 *     _    ____ ___
-	 *    / \  |  _ \_ _|
+	 *    / \  |  _ \   |
 	 *   / _ \ | |_) | |
 	 *  / ___ \|  __/| |
 	 * /_/   \_\_|  |___|
