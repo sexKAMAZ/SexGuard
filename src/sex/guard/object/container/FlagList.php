@@ -73,7 +73,6 @@ class FlagList
 	 * |_|   |_|\__,_|\__, |____|_|___/\__\
 	 *                /___/
 	 *
-	 *
 	 * @param bool[] $list
 	 */
 	function __construct( array $list )

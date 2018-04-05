@@ -44,9 +44,9 @@ interface Provider
 	/**
 	 * @param  string $owner
 	 *
-	 * @return Region|null
+	 * @return Region[]
 	 */
-	function getRegionByOwner( string $owner );
+	function getRegionByOwner( string $owner ): array;
 
 
 	/**
@@ -68,7 +68,7 @@ interface Provider
 	/**
 	 * @param  Region $region
 	 *
-	 * @return JsonProvider
+	 * @return Provider
 	 */
 	function setRegion( Region $region ): Provider;
 
@@ -76,7 +76,7 @@ interface Provider
 	/**
 	 * @param  string $name
 	 *
-	 * @return JsonProvider
+	 * @return Provider
 	 */
 	function removeRegion( string $name ): Provider;
 }

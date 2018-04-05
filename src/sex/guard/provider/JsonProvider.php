@@ -125,9 +125,9 @@ class JsonProvider implements Provider
 	/**
 	 * @param  string $owner
 	 *
-	 * @return Region|null
+	 * @return Region[]
 	 */
-	function getRegionByOwner( string $owner )
+	function getRegionByOwner( string $owner ): array
 	{
 		$owner  = strtolower($owner);
 		$result = [];

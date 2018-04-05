@@ -139,7 +139,7 @@ class Area // maybe extend AxisAlignedBB?
 	 *
 	 * @return int
 	 */
-	static function getLevelSideByVector( Vector3 $vector )
+	static function getLevelSideByVector( Vector3 $vector ): int
 	{
 		switch( true )
 		{
