@@ -195,6 +195,15 @@ class Manager extends PluginBase
 
 
 	/**
+	 * @return Provider
+	 */
+	private function getProvider( ): Provider
+	{
+		return $this->provider;
+	}
+
+
+	/**
 	 *     _    ____ ___
 	 *    / \  |  _ \_ _|
 	 *   / _ \ | |_) | |
@@ -213,22 +222,22 @@ class Manager extends PluginBase
 	{
 		if( is_string($type) and $by_name )
 		{
-			return $this->provider->getRegion($type);
+			return $this->getProvider()->getRegion($type);
 		}
 
 		elseif( is_string($type) )
 		{
-			return $this->provider->getRegionByOwner($type);
+			return $this->getProvider()->getRegionByOwner($type);
 		}
 
 		elseif( $type instanceof Position )
 		{
-			return $this->provider->getRegionByPosition($type);
+			return $this->getProvider()->getRegionByPosition($type);
 		}
 
 		elseif( $type instanceof Area )
 		{
-			return $this->provider->getRegionByArea($type);
+			return $this->getProvider()->getRegionByArea($type);
 		}
 
 		throw new InvalidArgumentException('Invalid type!');
@@ -240,7 +249,7 @@ class Manager extends PluginBase
 	 */
 	function setRegion( Region ...$region )
 	{
-		$this->provider->setRegion(...$region);
+		$this->getProvider()->setRegion(...$region);
 	}
 
 
@@ -249,6 +258,6 @@ class Manager extends PluginBase
 	 */
 	function removeRegion( Region ...$region )
 	{
-		$this->provider->removeRegion(...$region);
+		$this->getProvider()->removeRegion(...$region);
 	}
 }
