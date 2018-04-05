@@ -135,6 +135,25 @@ class Area // maybe extend AxisAlignedBB?
 
 
 	/**
+	 * @param  Vector3 $vector
+	 *
+	 * @return int
+	 */
+	static function getLevelSideByVector( Vector3 $vector )
+	{
+		switch( true )
+		{
+			case $vector->getX() > 0 and 0 > $vector->getZ(): return self::SIDE_NORTH_EAST;
+			case $vector->getX() > 0 and 0 < $vector->getZ(): return self::SIDE_SOUTH_EAST;
+			case $vector->getX() < 0 and 0 < $vector->getZ(): return self::SIDE_SOUTH_WEST;
+			case $vector->getX() < 0 and 0 > $vector->getZ(): return self::SIDE_NORTH_WEST;
+		}
+
+		return self::SIDE_NORTH_EAST;
+	}
+
+
+	/**
 	 * @var Level
 	 */
 	private $level;
@@ -220,15 +239,7 @@ class Area // maybe extend AxisAlignedBB?
 	{
 		$vector = $this->getCenterVector();
 
-		switch( true )
-		{
-			case $vector->getX() > 0 and 0 > $vector->getZ(): return self::SIDE_NORTH_EAST;
-			case $vector->getX() > 0 and 0 < $vector->getZ(): return self::SIDE_SOUTH_EAST;
-			case $vector->getX() < 0 and 0 < $vector->getZ(): return self::SIDE_SOUTH_WEST;
-			case $vector->getX() < 0 and 0 > $vector->getZ(): return self::SIDE_NORTH_WEST;
-		}
-
-		return self::SIDE_NORTH_EAST;
+		return self::getLevelSideByVector($vector);
 	}
 
 
