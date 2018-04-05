@@ -15,6 +15,7 @@
  */
 use sex\guard\util\Config;
 
+use sex\guard\object\Area;
 use sex\guard\object\Region;
 
 use sex\guard\provider\Provider;
@@ -54,6 +55,14 @@ interface Provider
 	 * @return Region|null
 	 */
 	function getRegionByPosition( Position $position );
+
+
+	/**
+	 * @param  Area $area
+	 *
+	 * @return Region[]
+	 */
+	function getRegionByArea( Area $area ): array;
 
 
 	/**

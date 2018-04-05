@@ -15,6 +15,7 @@
  */
 use sex\guard\util\Config;
 
+use sex\guard\object\Area;
 use sex\guard\object\Region;
 
 use sex\guard\provider\Provider;
@@ -184,6 +185,45 @@ class JsonProvider implements Provider
 		}
 
 		return null;
+	}
+
+
+	/**
+	 * @param  Area $area
+	 *
+	 * @return Region[]
+	 */
+	function getRegionByArea( Area $area ): array
+	{
+		$level = $area->getLevel()->getName();
+		$side  = $area->getLevelSide();
+		$list  = $this->region_list[$level][$side];
+
+		if( !isset($list) )
+		{
+			return null;
+		}
+
+		$result = [];
+
+		for( end($list), $i = key($list), reset($list); $i >= 0; $i-- )
+		{
+			if( !isset($list[$i]) )
+			{
+				continue;
+			}
+
+			$region = $list[$i];
+
+			if( !$area->intersectsWith($region) )
+			{
+				continue;
+			}
+
+			$result[] = $region;
+		}
+
+		return $result;
 	}
 
 
