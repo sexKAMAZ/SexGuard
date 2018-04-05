@@ -20,6 +20,9 @@ use sex\guard\object\Region;
 use sex\guard\provider\Provider;
 
 
+use pocketmine\level\Position;
+
+
 interface Provider
 {
 	/**
@@ -35,6 +38,22 @@ interface Provider
 	 * @return Region|null
 	 */
 	function getRegion( string $name );
+
+
+	/**
+	 * @param  string $owner
+	 *
+	 * @return Region|null
+	 */
+	function getRegionByOwner( string $owner );
+
+
+	/**
+	 * @param  Position $position
+	 *
+	 * @return Region|null
+	 */
+	function getRegionByPosition( Position $position );
 
 
 	/**

@@ -15,6 +15,8 @@
  */
 use sex\guard\object\Region;
 
+use sex\guard\provider\JsonProvider;
+
 //  sex\guard\command\GuardCommand;
 //  sex\guard\command\OldGuardCommand;
 
@@ -76,6 +78,7 @@ class Manager extends PluginBase
 	{
 		$this->loadInstance();
 
+		$this->loadProvider();
 		$this->loadListener();
 		$this->loadCommand();
 		$this->loadTask();
@@ -85,6 +88,15 @@ class Manager extends PluginBase
 	private function loadInstance( )
 	{
 		self::$instance = $this;
+	}
+
+
+	/**
+	 * @todo add SQLiteProvider
+	 */
+	private function loadProvider( )
+	{
+		$this->provider = new JsonProvider($this->getDataFolder(). 'data/');
 	}
 
 

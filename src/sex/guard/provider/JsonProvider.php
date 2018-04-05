@@ -20,12 +20,23 @@ use sex\guard\object\Region;
 use sex\guard\provider\Provider;
 
 
+use pocketmine\level\Position;
+
+
 class JsonProvider implements Provider
 {
+	const FILENAME = 'region_data.json';
+
+
 	/**
 	 * @var Config
 	 */
 	private $region_data;
+
+	/**
+	 * @var Region[][]
+	 */
+	private $region_list = [];
 
 
 	/**
@@ -45,9 +56,24 @@ class JsonProvider implements Provider
 			mkdir($location);
 		}
 
-		$this->region_data = new Config($location. 'region_data.json');
+		$this->region_data = new Config($location. self::FILENAME);
 
 		$this->region_data->reload();
+
+		foreach( $this->region_data->getAll() as $name => $data )
+		{
+			$region = Region::make($name, $data);
+
+			if( !isset($region) )
+			{
+				continue;
+			}
+
+			$level = $region->getLevel()->getName();
+			$side  = $region->getLevelSide();
+
+			$this->region_list[$level][$side] = $region;
+		}
 	}
 
 
@@ -59,6 +85,23 @@ class JsonProvider implements Provider
 	function getRegion( string $name )
 	{
 		$name = strtolower($name);
+
+		foreach( $this->region_list as $level => $list_by_level )
+		{
+			foreach( $list_by_level as $side => $list_by_side )
+			{
+				foreach( $list_by_side as $region )
+				{
+					if( $region->getName() != $name )
+					{
+						continue;
+					}
+
+					return $region;
+				}
+			}
+		}
+
 		$data = $this->region_data->get($name);
 
 		if( !$data )
@@ -66,39 +109,159 @@ class JsonProvider implements Provider
 			return null;
 		}
 
-		return Region::make($name, $data);
+		$region = Region::make($name, $data);
+
+		if( !isset($region) )
+		{
+			return null;
+		}
+
+		$this->setRegion($region);
+		return $region;
 	}
 
 
 	/**
-	 * @param  Region $region
+	 * @param  string $owner
+	 *
+	 * @return Region|null
+	 */
+	function getRegionByOwner( string $owner )
+	{
+		$owner = strtolower($owner);
+
+		foreach( $this->region_list as $level => $list_by_level )
+		{
+			foreach( $list_by_level as $side => $list_by_side )
+			{
+				foreach( $list_by_side as $region )
+				{
+					if( $region->getOwner() != $name )
+					{
+						continue;
+					}
+
+					return $region;
+				}
+			}
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * @param  Position $position
+	 *
+	 * @return Region|null
+	 */
+	function getRegionByPosition( Position $position )
+	{
+		$level = $position->getLevel()->getName();
+		$side  = Region::getLevelSideByVector($position);
+		$list  = $this->region_list[$level][$side];
+
+		if( !isset($list) )
+		{
+			return null;
+		}
+
+		for( end($list), $i = key($list), reset($list); $i >= 0; $i-- )
+		{
+			if( !isset($list[$i]) )
+			{
+				continue;
+			}
+
+			$region = $list[$i];
+
+			if( !$region->isVectorInside($position) )
+			{
+				continue;
+			}
+
+			return $region;
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * @param  Region[] $list
 	 *
 	 * @return JsonProvider
 	 */
-	function setRegion( Region $region ): Provider
+	function setRegion( Region ...$list ): JsonProvider
 	{
-		$name = $region->getName();
-		$data = $region->toData();
+		foreach( $list as $region )
+		{
+			$name = $region->getName();
 
-		$this->region_data->set($name, $data);
+			foreach( $this->region_list as $level => $list_by_level )
+			{
+				foreach( $list_by_level as $side => $list_by_side )
+				{
+					foreach( $list_by_side as $index => $old_region )
+					{
+						if( $old_region->getName() != $name )
+						{
+							continue;
+						}
+
+						unset($this->region_list[$level][$side][$index]);
+					}
+				}
+			}
+
+			$level = $region->getLevel()->getName();
+			$side  = $region->getLevelSide();
+
+			$this->region_list[$level][$side] = $region;
+
+			$this->region_data->set($name, $region->toData());
+		}
+
 		$this->region_data->save(true);
-
 		return $this;
 	}
 
 
 	/**
-	 * @param  string $name
+	 * @param  string[] $list
 	 *
 	 * @return JsonProvider
 	 */
-	function removeRegion( string $name ): Provider
+	function removeRegion( string ...$list ): JsonProvider
 	{
-		$name = strtolower($name);
+		foreach( $list as $name )
+		{
+			$name = strtolower($name);
 
-		$this->region_data->remove($name);
+			foreach( $this->region_list as $level => $list_by_level )
+			{
+				foreach( $list_by_level as $side => $list_by_side )
+				{
+					foreach( $list_by_side as $index => $region )
+					{
+						if( $region->getName() != $name )
+						{
+							continue;
+						}
+
+						unset($this->region_list[$level][$side][$index]);
+
+						/* still need this?
+						$this->region_list[$level][$side] = array_values($this->region_list[$level][$side]);
+						*/
+					}
+				}
+			}
+
+			$this->region_data->remove($name);
+		}
+
 		$this->region_data->save(true);
-
 		return $this;
 	}
 }
