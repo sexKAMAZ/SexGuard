@@ -129,7 +129,8 @@ class JsonProvider implements Provider
 	 */
 	function getRegionByOwner( string $owner )
 	{
-		$owner = strtolower($owner);
+		$owner  = strtolower($owner);
+		$result = [];
 
 		foreach( $this->region_list as $level => $list_by_level )
 		{
@@ -142,12 +143,12 @@ class JsonProvider implements Provider
 						continue;
 					}
 
-					return $region;
+					$result[] = $region;
 				}
 			}
 		}
 
-		return null;
+		return $result;
 	}
 
 

@@ -13,8 +13,10 @@
  *         https://t.me/sex_kamaz
  *
  */
+use sex\guard\object\Area;
 use sex\guard\object\Region;
 
+use sex\guard\provider\Provider;
 use sex\guard\provider\JsonProvider;
 
 //  sex\guard\command\GuardCommand;
@@ -40,9 +42,11 @@ use sex\guard\provider\JsonProvider;
 
 
 use pocketmine\plugin\PluginBase;
+use pocketmine\level\Position;
 
 
 use Exception;
+use InvalidArgumentException;
 
 
 class Manager extends PluginBase
@@ -66,11 +70,17 @@ class Manager extends PluginBase
 
 
 	/**
-	 *  __  __                                   
-	 * |  \/  | __ _ _ __   __ _  __ _  ___ _ __ 
+	 * @var Provider
+	 */
+	private $provider;
+
+
+	/**
+	 *  __  __
+	 * |  \/  | __ _ _ __   __ _  __ _  ___ _ __
 	 * | |\/| |/ _' | '_ \ / _' |/ _' |/ _ \ '_/
-	 * | |  | | (_) | | | | (_) | (_) |  __/ |   
-	 * |_|  |_|\__,_|_| |_|\__,_|\__, |\___|_|   
+	 * | |  | | (_) | | | | (_) | (_) |  __/ |
+	 * |_|  |_|\__,_|_| |_|\__,_|\__, |\___|_|
 	 *                           /___/
 	 *
 	 */
@@ -181,5 +191,64 @@ class Manager extends PluginBase
 		{
 			$this->getServer()->getScheduler()->scheduleRepeatingTask(...$task);
 		}
+	}
+
+
+	/**
+	 *     _    ____ ___
+	 *    / \  |  _ \_ _|
+	 *   / _ \ | |_) | |
+	 *  / ___ \|  __/| |
+	 * /_/   \_\_|  |___|
+	 *
+	 *
+	 * @param  mixed $type
+	 * @param  bool  $by_name
+	 *
+	 * @return mixed|null
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	function getRegion( $type, bool $by_name = false )
+	{
+		if( is_string($type) and $by_name )
+		{
+			return $this->provider->getRegion($type);
+		}
+
+		elseif( is_string($type) )
+		{
+			return $this->provider->getRegionByOwner($type);
+		}
+
+		elseif( $type instanceof Position )
+		{
+			return $this->provider->getRegionByPosition($type);
+		}
+
+		elseif( $type instanceof Area )
+		{
+			return $this->provider->getRegionByArea($type);
+		}
+
+		throw new InvalidArgumentException('Invalid type!');
+	}
+
+
+	/**
+	 * @param Region[] $region
+	 */
+	function setRegion( Region ...$region )
+	{
+		$this->provider->setRegion(...$region);
+	}
+
+
+	/**
+	 * @param Region[] $region
+	 */
+	function removeRegion( Region ...$region )
+	{
+		$this->provider->removeRegion(...$region);
 	}
 }
