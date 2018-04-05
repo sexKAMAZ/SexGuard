@@ -24,6 +24,12 @@ use SQLite3;
 class SexQLite
 {
 	/**
+	 * @var string
+	 */
+	private static $file;
+
+
+	/**
 	 *  _____            ___  _    _ _
 	 * / ___/  _____  __/ _ \| |  (_) |_____
 	 * \___ \ / _ \ \/ / | | | |  | | __/ _ \
@@ -31,13 +37,25 @@ class SexQLite
 	 * /____/ \___/_/\_\\__,_\____|_|\__\___/
 	 *
 	 *
-	 * @param  string $database
+	 * @param  string $file
 	 *
 	 * @return SQLite3
 	 */
-	static function connect( string $database ): SQLite3
+	static function connect( string $file = '' ): SQLite3
 	{
-		return new SQLite3($database);
+		if( !empty($file) )
+		{
+			self::$file = $file;
+
+			return new SQLite3($file);
+		}
+
+		if( !isset(self::$file) )
+		{
+			throw new Exception("SexQLite error: file not found.");
+		}
+
+		return new SQLite3(self::$file);
 	}
 
 

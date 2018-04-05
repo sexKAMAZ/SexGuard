@@ -13,8 +13,6 @@
  *         https://t.me/sex_kamaz
  *
  */
-use sex\guard\util\Config;
-
 use sex\guard\object\Area;
 use sex\guard\object\Region;
 
@@ -22,6 +20,7 @@ use sex\guard\provider\Provider;
 
 
 use pocketmine\level\Position;
+use pocketmine\utils\Config;
 
 
 interface Provider
