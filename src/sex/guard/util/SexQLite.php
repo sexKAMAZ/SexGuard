@@ -113,7 +113,7 @@ class SexQLite
 	{
 		if( $statement->bindValue($param, self::type($value)) )
 		{
-			return true;
+			return $statement;
 		}
 
 		throw new Exception("SexQLite error: trying to bind $value in $param.");

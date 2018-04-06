@@ -13,11 +13,11 @@
  *         https://t.me/sex_kamaz
  *
  */
+use sex\guard\object\Region;
+
+
 class MemberList
 {
-	const INDEX_MEMBERLIST = 'member_list';
-
-
 	/**
 	 * @param  mixed[]
 	 *
@@ -25,15 +25,15 @@ class MemberList
 	 */
 	static function fromData( array $data )
 	{
-		$list = $data[self::INDEX_MEMBERLIST];
+		$list = $data[Region::INDEX_MEMBER_LIST];
 
 		if( !isset($list) )
 		{
-			echo "MemberList::fromData() error: member list not found.". PHP_EOL;
+			echo "MemberList::fromData() error: member_list not found.". PHP_EOL;
 			return null;
 		}
 
-		return new MemberList(...$list);
+		return new MemberList(...explode(':', $list));
 	}
 
 
@@ -110,5 +110,14 @@ class MemberList
 		$nick = strtolower($nick);
 
 		return array_search($nick, $this->list) ? true : false;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	function toString( ): string
+	{
+		return implode(':', $this->list);
 	}
 }

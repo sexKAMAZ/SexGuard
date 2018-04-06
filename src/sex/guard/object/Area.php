@@ -13,6 +13,7 @@
  *         https://t.me/sex_kamaz
  *
  */
+use sex\guard\object\Region;
 use sex\guard\object\Selector;
 
 
@@ -23,12 +24,8 @@ use pocketmine\math\Vector3;
 use pocketmine\Server;
 
 
-class Area // maybe extend AxisAlignedBB?
+class Area
 {
-	const INDEX_AREA_LEVEL     = 'level';
-	const INDEX_AREA_MINVECTOR = 'min_vector';
-	const INDEX_AREA_MAXVECTOR = 'max_vector';
-
 	const SIDE_NORTH_EAST = 0;
 	const SIDE_SOUTH_EAST = 1;
 	const SIDE_SOUTH_WEST = 2;
@@ -91,7 +88,7 @@ class Area // maybe extend AxisAlignedBB?
 	 */
 	static function fromData( array $data )
 	{
-		$level = Server::getInstance()->getLevelByName($data[self::INDEX_AREA_LEVEL] ?? '');
+		$level = Server::getInstance()->getLevelByName($data[Region::INDEX_LEVEL] ?? '');
 
 		if( !isset($level) )
 		{
@@ -99,38 +96,55 @@ class Area // maybe extend AxisAlignedBB?
 			return null;
 		}
 
-		$min = $data[self::INDEX_AREA_MINVECTOR];
+		$min_x = $data[Region::INDEX_MIN_X];
 
-		if( !isset($min) )
+		if( !isset($min_x) )
 		{
-			echo "Area::fromData() error: min position not found.". PHP_EOL;
+			echo "Area::fromData() error: min_x position not found.". PHP_EOL;
 			return null;
 		}
 
-		$max = $data[self::INDEX_AREA_MAXVECTOR];
+		$max_x = $data[Region::INDEX_MAX_X];
 
-		if( !isset($max) )
+		if( !isset($max_x) )
 		{
-			echo "Area::fromData() error: max position not found.". PHP_EOL;
+			echo "Area::fromData() error: max_x position not found.". PHP_EOL;
 			return null;
 		}
 
-		for( $i = 0; $i <= 2; $i++ )
-		{
-			if( !isset($min[$i]) )
-			{
-				echo "Area::fromData() error: min[$i] position not found.". PHP_EOL;
-				return null;
-			}
+		$min_y = $data[Region::INDEX_MIN_Y];
 
-			if( !isset($max[$i]) )
-			{
-				echo "Area::fromData() error: max[$i] position not found.". PHP_EOL;
-				return null;
-			}
+		if( !isset($min_y) )
+		{
+			echo "Area::fromData() error: min_y position not found.". PHP_EOL;
+			return null;
 		}
 
-		return new Area($level, new Vector3(...$min), new Vector3(...$max));
+		$max_y = $data[Region::INDEX_MAX_Y];
+
+		if( !isset($max_y) )
+		{
+			echo "Area::fromData() error: max_y position not found.". PHP_EOL;
+			return null;
+		}
+
+		$min_z = $data[Region::INDEX_MIN_Z];
+
+		if( !isset($min_z) )
+		{
+			echo "Area::fromData() error: min_z position not found.". PHP_EOL;
+			return null;
+		}
+
+		$max_z = $data[Region::INDEX_MAX_Z];
+
+		if( !isset($max_z) )
+		{
+			echo "Area::fromData() error: max_z position not found.". PHP_EOL;
+			return null;
+		}
+
+		return new Area($level, new Vector3($min_x, $min_y, $min_z), new Vector3($max_x, $max_y, $max_z));
 	}
 
 
@@ -161,20 +175,20 @@ class Area // maybe extend AxisAlignedBB?
 	/**
 	 * @var Vector3
 	 */
-	private $min;
+	private $min_vector;
 
 	/**
 	 * @var Vector3
 	 */
-	private $max;
+	private $max_vector;
 
 
 	/**
 	 *     _
-       *    / \   _ _____  __ _
-       *   / _ \ | '_/ _ \/ _' |
-       *  / ___ \| ||  __/ (_) |
-       * /_/   \_|_| \___\\__,_|
+	 *    / \   _ _____  __ _
+	 *   / _ \ | '_/ _ \/ _' |
+	 *  / ___ \| ||  __/ (_) |
+	 * /_/   \_|_| \___\\__,_|
 	 *
 	 *
 	 * @param Level   $level
@@ -305,17 +319,14 @@ class Area // maybe extend AxisAlignedBB?
 	function intersectsWith( Area $area ): bool
 	{
 		if(
-			$area->getMaxVector()->getX() > $this->getMinVector()->getX() and
-			$area->getMinVector()->getX() < $this->getMaxVector()->getX()
+			$this->getMinVector()->getX() <= $area->getMaxVector()->getX() and
+			$this->getMaxVector()->getX() >= $area->getMinVector()->getX() and
+			$this->getMinVector()->getY() <= $area->getMaxVector()->getY() and
+			$this->getMaxVector()->getY() >= $area->getMinVector()->getY() and
+			$this->getMinVector()->getZ() <= $area->getMaxVector()->getZ() and
+			$this->getMaxVector()->getZ() >= $area->getMinVector()->getZ()
 		) {
-			if(
-				$area->getMaxVector()->getY() > $this->getMinVector()->getY() and
-				$area->getMinVector()->getY() < $this->getMaxVector()->getY()
-			) {
-				return
-					$area->getMaxVector()->getZ() > $this->getMinVector()->getZ() and
-					$area->getMinVector()->getZ() < $this->getMaxVector()->getZ();
-			}
+			return true;
 		}
 
 		return false;
@@ -330,22 +341,17 @@ class Area // maybe extend AxisAlignedBB?
 	function isVectorInside( Vector3 $vector ): bool
 	{
 		if(
-			$vector->getX() <= $this->getMinVector()->getX() or
-			$vector->getX() >= $this->getMaxVector()->getX()
+			$this->getMinVector()->getX() <= $vector->getX() and
+			$this->getMaxVector()->getX() >= $vector->getX() and
+			$this->getMinVector()->getY() <= $vector->getY() and
+			$this->getMaxVector()->getY() >= $vector->getY() and
+			$this->getMinVector()->getZ() <= $vector->getZ() and
+			$this->getMaxVector()->getZ() >= $vector->getZ()
 		) {
-			return false;
+			return true;
 		}
 
-		if(
-			$vector->getY() <= $this->getMinVector()->getY() or
-			$vector->getY() >= $this->getMaxVector()->getY()
-		) {
-			return false;
-		}
-
-		return
-			$vector->getZ() > $this->getMinVector()->getZ() and
-			$vector->getZ() < $this->getMaxVector()->getZ();
+		return false;
 	}
 
 
@@ -355,17 +361,13 @@ class Area // maybe extend AxisAlignedBB?
 	function toData( ): array
 	{
 		return [
-			self::INDEX_AREA_LEVEL     => $this->getLevel()->getName(),
-			self::INDEX_AREA_MINVECTOR => [
-				$this->getMinVector()->getFloorX(),
-				$this->getMinVector()->getFloorY(),
-				$this->getMinVector()->getFloorZ()
-			],
-			self::INDEX_AREA_MAXVECTOR => [
-				$this->getMaxVector()->getFloorX(),
-				$this->getMaxVector()->getFloorY(),
-				$this->getMaxVector()->getFloorZ()
-			]
+			Region::INDEX_LEVEL => $this->getLevel()->getName(),
+			Region::INDEX_MIN_X => $this->getMinVector()->getX(),
+			Region::INDEX_MAX_X => $this->getMaxVector()->getX(),
+			Region::INDEX_MIN_Y => $this->getMinVector()->getY(),
+			Region::INDEX_MAX_Y => $this->getMaxVector()->getY(),
+			Region::INDEX_MIN_Z => $this->getMinVector()->getZ(),
+			Region::INDEX_MAX_Z => $this->getMaxVector()->getZ()
 		];
 	}
 }

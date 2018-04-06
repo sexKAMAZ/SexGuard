@@ -53,12 +53,14 @@ class JsonProvider implements Provider
 	{
 		if( !is_dir($location) )
 		{
-			mkdir($location);
+			@mkdir($location);
 		}
 
 		$this->region_data = new Config($location. self::FILENAME);
 
 		$this->region_data->reload();
+
+		$list = [];
 
 		foreach( $this->region_data->getAll() as $name => $data )
 		{
@@ -69,11 +71,10 @@ class JsonProvider implements Provider
 				continue;
 			}
 
-			$level = $region->getLevel()->getName();
-			$side  = $region->getLevelSide();
-
-			$this->region_list[$level][$side] = $region;
+			$list[] = $region;
 		}
+
+		$this->setRegion(...$list);
 	}
 
 
@@ -137,7 +138,7 @@ class JsonProvider implements Provider
 			{
 				foreach( $list_by_side as $region )
 				{
-					if( $region->getOwner() != $name )
+					if( $region->getOwner() != $owner )
 					{
 						continue;
 					}
@@ -230,9 +231,9 @@ class JsonProvider implements Provider
 	/**
 	 * @param  Region[] $list
 	 *
-	 * @return JsonProvider
+	 * @return Provider
 	 */
-	function setRegion( Region ...$list ): JsonProvider
+	function setRegion( Region ...$list ): Provider
 	{
 		foreach( $list as $region )
 		{
@@ -257,7 +258,7 @@ class JsonProvider implements Provider
 			$level = $region->getLevel()->getName();
 			$side  = $region->getLevelSide();
 
-			$this->region_list[$level][$side] = $region;
+			$this->region_list[$level][$side][] = $region;
 
 			$this->region_data->set($name, $region->toData());
 		}
@@ -270,9 +271,9 @@ class JsonProvider implements Provider
 	/**
 	 * @param  string[] $list
 	 *
-	 * @return JsonProvider
+	 * @return Provider
 	 */
-	function removeRegion( string ...$list ): JsonProvider
+	function removeRegion( string ...$list ): Provider
 	{
 		foreach( $list as $name )
 		{

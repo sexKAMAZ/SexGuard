@@ -13,11 +13,11 @@
  *         https://t.me/sex_kamaz
  *
  */
+use sex\guard\object\Region;
+
+
 class FlagList
 {
-	const INDEX_FLAGLIST = 'flag_list';
-
-
 	/**
 	 * @var bool[]
 	 */
@@ -47,12 +47,28 @@ class FlagList
 	 */
 	static function fromData( array $data )
 	{
-		$list = $data[self::INDEX_FLAGLIST];
+		$list = $data[Region::INDEX_FLAG_LIST];
 
 		if( !isset($list) )
 		{
-			echo "MemberList::fromData() error: flag list not found.". PHP_EOL;
+			echo "MemberList::fromData() error: flag_list not found.". PHP_EOL;
 			return null;
+		}
+
+		$list = explode(':', $list);
+
+		foreach( $list as $index => $flag )
+		{
+			$flag = explode('=', $flag);
+
+			unset($list[$index]);
+
+			if( count($flag) != 2 )
+			{
+				continue;
+			}
+
+			$list[$flag[0]] = ($flag[1] == 'true');
 		}
 
 		return new FlagList($list);
@@ -158,5 +174,21 @@ class FlagList
 		$flag = strtolower($flag);
 
 		return isset($this->list[$flag]);
+	}
+
+
+	/**
+	 * @return string
+	 */
+	function toString( ): string
+	{
+		$list = [];
+
+		foreach( $this->list as $flag => $value )
+		{
+			$list[] = $flag. '='. ($value ? 'true' : 'false');
+		}
+
+		return implode(':', $list);
 	}
 }

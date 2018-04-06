@@ -65,17 +65,17 @@ interface Provider
 
 
 	/**
-	 * @param  Region $region
+	 * @param  Region[] $region
 	 *
 	 * @return Provider
 	 */
-	function setRegion( Region $region ): Provider;
+	function setRegion( Region ...$region ): Provider;
 
 
 	/**
-	 * @param  string $name
+	 * @param  string[] $name
 	 *
 	 * @return Provider
 	 */
-	function removeRegion( string $name ): Provider;
+	function removeRegion( string ...$name ): Provider;
 }

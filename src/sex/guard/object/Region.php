@@ -24,8 +24,16 @@ use pocketmine\level\Level;
 
 class Region extends Area
 {
-	const INDEX_REGION_AREA  = 'position';
-	const INDEX_REGION_OWNER = 'owner';
+	const INDEX_OWNER       = 'owner';
+	const INDEX_MEMBER_LIST = 'member_list';
+	const INDEX_FLAG_LIST   = 'flag_list';
+	const INDEX_LEVEL       = 'level';
+	const INDEX_MIN_X       = 'min_x';
+	const INDEX_MAX_X       = 'max_x';
+	const INDEX_MIN_Y       = 'min_y';
+	const INDEX_MAX_Y       = 'max_y';
+	const INDEX_MIN_Z       = 'min_z';
+	const INDEX_MAX_Z       = 'max_z';
 
 
 	/**
@@ -36,22 +44,7 @@ class Region extends Area
 	 */
 	static function make( string $name, array $data )
 	{
-		$area = $data[self::INDEX_REGION_AREA];
-
-		if( !isset($area) )
-		{
-			echo "Region::fromData() error: area not found.". PHP_EOL;
-			return null;
-		}
-
-		$area = parent::fromData($area);
-
-		if( !isset($area) )
-		{
-			return null;
-		}
-
-		$owner = $data[self::INDEX_REGION_OWNER];
+		$owner = $data[self::INDEX_OWNER];
 
 		if( !isset($owner) )
 		{
@@ -69,6 +62,13 @@ class Region extends Area
 		$flag = FlagList::fromData($data);
 
 		if( !isset($flag) )
+		{
+			return null;
+		}
+
+		$area = parent::fromData($data);
+
+		if( !isset($area) )
 		{
 			return null;
 		}
@@ -213,11 +213,34 @@ class Region extends Area
 	 */
 	function toData( ): array
 	{
+		/*
 		return [
-			'position'    => parent::toData(),
-			'owner'       => $this->getOwner(),
-			'member_list' => $this->getMemberList()->getAll(),
-			'flag_list'   => $this->getFlagList()->getAll()
+			self::INDEX_OWNER       => $this->getOwner(),
+			self::INDEX_MEMBER_LIST => $this->getMemberList()->toString(),
+			self::INDEX_FLAG_LIST   => $this->getFlagList()->toString(),
+			self::INDEX_LEVEL       => $this->getLevel()->getName(),
+			self::INDEX_MIN_X       => $this->getMinVector()->getX(),
+			self::INDEX_MAX_X       => $this->getMaxVector()->getX(),
+			self::INDEX_MIN_Y       => $this->getMinVector()->getY(),
+			self::INDEX_MAX_Y       => $this->getMaxVector()->getY(),
+			self::INDEX_MIN_Z       => $this->getMinVector()->getZ(),
+			self::INDEX_MAX_Z       => $this->getMaxVector()->getZ()
 		];
+		*/
+
+		$data = [
+			self::INDEX_OWNER       => $this->getOwner(),
+			self::INDEX_MEMBER_LIST => $this->getMemberList()->toString(),
+			self::INDEX_FLAG_LIST   => $this->getFlagList()->toString()
+		];
+
+		$area = parent::toData();
+
+		foreach( $area as $index => $value )
+		{
+			$data[$index] = $value;
+		}
+
+		return $data;
 	}
 }
