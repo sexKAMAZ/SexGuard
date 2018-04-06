@@ -105,11 +105,11 @@ class SexQLite
 	 * @param  string      $param
 	 * @param  mixed       $value
 	 *
-	 * @return bool
+	 * @return SQLite3Stmt
 	 *
 	 * @throws Exception
 	 */
-	static function bind( SQLite3Stmt $statement, string $param, $value ): bool
+	static function bind( SQLite3Stmt $statement, string $param, $value ): SQLite3Stmt
 	{
 		if( $statement->bindValue($param, self::type($value)) )
 		{
