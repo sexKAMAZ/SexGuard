@@ -47,15 +47,13 @@ class FlagList
 	 */
 	static function fromData( array $data )
 	{
-		$list = $data[Region::INDEX_FLAG_LIST];
-
-		if( !isset($list) )
+		if( !isset($data[Region::INDEX_FLAG_LIST]) )
 		{
 			echo "MemberList::fromData() error: flag_list not found.". PHP_EOL;
 			return null;
 		}
 
-		$list = explode(':', $list);
+		$list = explode(':', $data[Region::INDEX_FLAG_LIST]);
 
 		foreach( $list as $index => $flag )
 		{

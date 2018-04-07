@@ -25,15 +25,13 @@ class MemberList
 	 */
 	static function fromData( array $data )
 	{
-		$list = $data[Region::INDEX_MEMBER_LIST];
-
-		if( !isset($list) )
+		if( !isset($data[Region::INDEX_MEMBER_LIST]) )
 		{
 			echo "MemberList::fromData() error: member_list not found.". PHP_EOL;
 			return null;
 		}
 
-		return new MemberList(...explode(':', $list));
+		return new MemberList(...explode(':', $data[Region::INDEX_MEMBER_LIST]));
 	}
 
 

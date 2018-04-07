@@ -88,7 +88,14 @@ class Area
 	 */
 	static function fromData( array $data )
 	{
-		$level = Server::getInstance()->getLevelByName($data[Region::INDEX_LEVEL] ?? '');
+		if( !isset($data[Region::INDEX_LEVEL]) )
+		{
+			echo "Area::fromData() error: level not found.". PHP_EOL;
+			return null;
+		}
+
+		$level = $data[Region::INDEX_LEVEL];
+		$level = Server::getInstance()->getLevelByName($level);
 
 		if( !isset($level) )
 		{
@@ -96,53 +103,53 @@ class Area
 			return null;
 		}
 
-		$min_x = $data[Region::INDEX_MIN_X];
-
-		if( !isset($min_x) )
+		if( !isset($data[Region::INDEX_MIN_X]) )
 		{
 			echo "Area::fromData() error: min_x position not found.". PHP_EOL;
 			return null;
 		}
 
-		$max_x = $data[Region::INDEX_MAX_X];
+		$min_x = $data[Region::INDEX_MIN_X];
 
-		if( !isset($max_x) )
+		if( !isset($data[Region::INDEX_MAX_X]) )
 		{
 			echo "Area::fromData() error: max_x position not found.". PHP_EOL;
 			return null;
 		}
 
-		$min_y = $data[Region::INDEX_MIN_Y];
+		$max_x = $data[Region::INDEX_MAX_X];
 
-		if( !isset($min_y) )
+		if( !isset($data[Region::INDEX_MIN_Y]) )
 		{
 			echo "Area::fromData() error: min_y position not found.". PHP_EOL;
 			return null;
 		}
 
-		$max_y = $data[Region::INDEX_MAX_Y];
+		$min_y = $data[Region::INDEX_MIN_Y];
 
-		if( !isset($max_y) )
+		if( !isset($data[Region::INDEX_MAX_Y]) )
 		{
 			echo "Area::fromData() error: max_y position not found.". PHP_EOL;
 			return null;
 		}
 
-		$min_z = $data[Region::INDEX_MIN_Z];
+		$max_y = $data[Region::INDEX_MAX_Y];
 
-		if( !isset($min_z) )
+		if( !isset($data[Region::INDEX_MIN_Z]) )
 		{
 			echo "Area::fromData() error: min_z position not found.". PHP_EOL;
 			return null;
 		}
 
-		$max_z = $data[Region::INDEX_MAX_Z];
+		$min_z = $data[Region::INDEX_MIN_Z];
 
-		if( !isset($max_z) )
+		if( !isset($data[Region::INDEX_MAX_Z]) )
 		{
 			echo "Area::fromData() error: max_z position not found.". PHP_EOL;
 			return null;
 		}
+
+		$max_z = $data[Region::INDEX_MAX_Z];
 
 		return new Area($level, new Vector3($min_x, $min_y, $min_z), new Vector3($max_x, $max_y, $max_z));
 	}

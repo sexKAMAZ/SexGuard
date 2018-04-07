@@ -24,12 +24,6 @@ use SQLite3;
 class SexQLite
 {
 	/**
-	 * @var string
-	 */
-	private static $file;
-
-
-	/**
 	 *  _____            ___  _    _ _
 	 * / ___/  _____  __/ _ \| |  (_) |_____
 	 * \___ \ / _ \ \/ / | | | |  | | __/ _ \
@@ -41,21 +35,9 @@ class SexQLite
 	 *
 	 * @return SQLite3
 	 */
-	static function connect( string $file = '' ): SQLite3
+	static function connect( string $file ): SQLite3
 	{
-		if( !empty($file) )
-		{
-			self::$file = $file;
-
-			return new SQLite3($file);
-		}
-
-		if( !isset(self::$file) )
-		{
-			throw new Exception("SexQLite error: file not found.");
-		}
-
-		return new SQLite3(self::$file);
+		return new SQLite3($file);
 	}
 
 
@@ -111,12 +93,17 @@ class SexQLite
 	 */
 	static function bind( SQLite3Stmt $statement, string $param, $value ): SQLite3Stmt
 	{
-		if( $statement->bindValue($param, self::type($value)) )
+		/*
+		if( $statement->bindValue($param, $value, self::type($value)) )
 		{
 			return $statement;
 		}
 
 		throw new Exception("SexQLite error: trying to bind $value in $param.");
+		*/
+
+		$statement->bindValue($param, $value, self::type($value));
+		return $statement;
 	}
 
 
@@ -146,17 +133,6 @@ class SexQLite
 		}
 
 		return $array;
-	}
-
-
-	/**
-	 * @param  SQLite3Result $result
-	 *
-	 * @return int
-	 */
-	static function num( SQLite3Result $result ): int
-	{
-		return $result->numColumns();
 	}
 
 

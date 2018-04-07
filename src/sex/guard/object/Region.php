@@ -24,6 +24,7 @@ use pocketmine\level\Level;
 
 class Region extends Area
 {
+	const INDEX_NAME        = 'name';
 	const INDEX_OWNER       = 'owner';
 	const INDEX_MEMBER_LIST = 'member_list';
 	const INDEX_FLAG_LIST   = 'flag_list';
@@ -44,14 +45,13 @@ class Region extends Area
 	 */
 	static function make( string $name, array $data )
 	{
-		$owner = $data[self::INDEX_OWNER];
-
-		if( !isset($owner) )
+		if( !isset($data[self::INDEX_OWNER]) )
 		{
 			echo "Region::fromData() error: owner not found.". PHP_EOL;
 			return null;
 		}
 
+		$owner  = $data[self::INDEX_OWNER];
 		$member = MemberList::fromData($data);
 
 		if( !isset($member) )
@@ -213,21 +213,6 @@ class Region extends Area
 	 */
 	function toData( ): array
 	{
-		/*
-		return [
-			self::INDEX_OWNER       => $this->getOwner(),
-			self::INDEX_MEMBER_LIST => $this->getMemberList()->toString(),
-			self::INDEX_FLAG_LIST   => $this->getFlagList()->toString(),
-			self::INDEX_LEVEL       => $this->getLevel()->getName(),
-			self::INDEX_MIN_X       => $this->getMinVector()->getX(),
-			self::INDEX_MAX_X       => $this->getMaxVector()->getX(),
-			self::INDEX_MIN_Y       => $this->getMinVector()->getY(),
-			self::INDEX_MAX_Y       => $this->getMaxVector()->getY(),
-			self::INDEX_MIN_Z       => $this->getMinVector()->getZ(),
-			self::INDEX_MAX_Z       => $this->getMaxVector()->getZ()
-		];
-		*/
-
 		$data = [
 			self::INDEX_OWNER       => $this->getOwner(),
 			self::INDEX_MEMBER_LIST => $this->getMemberList()->toString(),

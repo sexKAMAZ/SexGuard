@@ -18,6 +18,7 @@ use sex\guard\object\Region;
 
 use sex\guard\provider\Provider;
 use sex\guard\provider\JsonProvider;
+use sex\guard\provider\SQLiteProvider;
 
 //  sex\guard\command\GuardCommand;
 //  sex\guard\command\OldGuardCommand;
@@ -105,7 +106,7 @@ class Manager extends PluginBase
 	 */
 	private function loadProvider( )
 	{
-		$this->provider = new JsonProvider($this->getDataFolder(). 'data/');
+		$this->provider = new SQLiteProvider($this->getDataFolder(). 'data/');
 	}
 
 
@@ -253,10 +254,10 @@ class Manager extends PluginBase
 
 
 	/**
-	 * @param Region[] $region
+	 * @param string[] $name
 	 */
-	function removeRegion( Region ...$region )
+	function removeRegion( string ...$name )
 	{
-		$this->getProvider()->removeRegion(...$region);
+		$this->getProvider()->removeRegion(...$name);
 	}
 }
