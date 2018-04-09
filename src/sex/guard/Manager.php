@@ -213,10 +213,10 @@ class Manager extends PluginBase
 	 *
 	 * CHOOSE WHAT YOU NEED:
 	 * 1. if you need to get region by name,
-	 *    than $type must be string and $by_name = true.
+	 *    than $type must be region's name and $by_name = true.
 	 *    function returns Region or null.
 	 * 2. if you need to get region by owner,
-	 *    than $type must be string and $by_name = false.
+	 *    than $type must be owner's name and $by_name = false.
 	 *    function returns Region[] or empty list.
 	 * 3. if you need to get region by Position,
 	 *    than $type must be Position (or extend Position).
