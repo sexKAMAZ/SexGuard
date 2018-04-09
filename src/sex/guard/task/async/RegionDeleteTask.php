@@ -14,7 +14,6 @@
  *
  */
 use sex\guard\object\Region;
-
 use sex\guard\util\SexQLite;
 
 
@@ -40,15 +39,16 @@ class RegionDeleteTask extends AsyncTask
 
 
 	/**
-	 *  _____         _
-	 * |_   _|_ _ ___| | __
-	 *   | |/ _' / __| |/ /
-	 *   | | (_) \__ \   <
-	 *   |_|\__,_|___/_|\_\
+	 *  _            _
+	 * | |____ _ ___| | __
+	 * |  _/ _' / __| |/ /
+	 * | || (_) \__ \   <
+	 *  \__\__,_|___/_|\_\
 	 *
 	 *
-	 * @param string $sql
-	 * @param string $list
+	 * @param string   $file
+	 * @param string   $sql
+	 * @param string[] $list
 	 */
 	function __construct( string $file, string $sql, string ...$list )
 	{

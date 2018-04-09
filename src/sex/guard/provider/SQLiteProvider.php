@@ -17,7 +17,6 @@ use sex\guard\object\Area;
 use sex\guard\object\Region;
 
 use sex\guard\util\SexQLite;
-
 use sex\guard\provider\Provider;
 
 use sex\guard\task\async\RegionDeleteTask;
@@ -177,12 +176,12 @@ class SQLiteProvider implements Provider
 
 
 	/**
-	 *  _____  ___  _    _ _       ____                 _     _
-	 * / ___/ / _ \| |  (_) |_____|  _ \ _ _______    _(_) __| | ___ _ __
-	 * \___ \| | | | |  | | __/ _ \ (_) | '_/ _ \ \  / | |/ _' |/ _ \ '_/
-	 *  ___) | |_| | |__| | ||  __/  __/| || (_) \ \/ /| | (_) |  __/ |
-	 * /____/ \__,_\____|_|\__\___|_|   |_| \___/ \__/ |_|\__,_|\___|_|
-	 *
+	 *                       _     _
+	 *  _ __  _ _______    _(_) __| | ___ _ __
+	 * | '_ \| '_/ _ \ \  / | |/ _' |/ _ \ '_/
+	 * | (_) | || (_) \ \/ /| | (_) |  __/ |
+	 * | ,__/|_| \___/ \__/ |_|\__,_|\___|_|
+	 * |_|
 	 *
 	 * @param string $location
 	 */

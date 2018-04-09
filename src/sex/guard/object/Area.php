@@ -94,8 +94,7 @@ class Area
 			return null;
 		}
 
-		$level = $data[Region::INDEX_LEVEL];
-		$level = Server::getInstance()->getLevelByName($level);
+		$level = Server::getInstance()->getLevelByName($data[Region::INDEX_LEVEL]);
 
 		if( !isset($level) )
 		{
@@ -103,55 +102,33 @@ class Area
 			return null;
 		}
 
-		if( !isset($data[Region::INDEX_MIN_X]) )
+		$min = [];
+
+		foreach( [Region::INDEX_MIN_X, Region::INDEX_MIN_Y, Region::INDEX_MIN_Z] as $key => $coord )
 		{
-			echo "Area::fromData() error: min_x position not found.". PHP_EOL;
-			return null;
+			if( !isset($data[$coord]) )
+			{
+				echo "Area::fromData() error: $coord position not found.". PHP_EOL;
+				return null;
+			}
+
+			$min[$key] = $data[$coord];
 		}
 
-		$min_x = $data[Region::INDEX_MIN_X];
+		$max = [];
 
-		if( !isset($data[Region::INDEX_MAX_X]) )
+		foreach( [Region::INDEX_MAX_X, Region::INDEX_MAX_Y, Region::INDEX_MAX_Z] as $key => $coord )
 		{
-			echo "Area::fromData() error: max_x position not found.". PHP_EOL;
-			return null;
+			if( !isset($data[$coord]) )
+			{
+				echo "Area::fromData() error: $coord position not found.". PHP_EOL;
+				return null;
+			}
+
+			$max[$key] = $data[$coord];
 		}
 
-		$max_x = $data[Region::INDEX_MAX_X];
-
-		if( !isset($data[Region::INDEX_MIN_Y]) )
-		{
-			echo "Area::fromData() error: min_y position not found.". PHP_EOL;
-			return null;
-		}
-
-		$min_y = $data[Region::INDEX_MIN_Y];
-
-		if( !isset($data[Region::INDEX_MAX_Y]) )
-		{
-			echo "Area::fromData() error: max_y position not found.". PHP_EOL;
-			return null;
-		}
-
-		$max_y = $data[Region::INDEX_MAX_Y];
-
-		if( !isset($data[Region::INDEX_MIN_Z]) )
-		{
-			echo "Area::fromData() error: min_z position not found.". PHP_EOL;
-			return null;
-		}
-
-		$min_z = $data[Region::INDEX_MIN_Z];
-
-		if( !isset($data[Region::INDEX_MAX_Z]) )
-		{
-			echo "Area::fromData() error: max_z position not found.". PHP_EOL;
-			return null;
-		}
-
-		$max_z = $data[Region::INDEX_MAX_Z];
-
-		return new Area($level, new Vector3($min_x, $min_y, $min_z), new Vector3($max_x, $max_y, $max_z));
+		return new Area($level, new Vector3(...$min), new Vector3(...$max));
 	}
 
 
@@ -191,11 +168,11 @@ class Area
 
 
 	/**
-	 *     _
-	 *    / \   _ _____  __ _
-	 *   / _ \ | '_/ _ \/ _' |
-	 *  / ___ \| ||  __/ (_) |
-	 * /_/   \_|_| \___\\__,_|
+	 *
+	 *   __ _ _ _____  __ _
+	 *  / _' | '_/ _ \/ _' |
+	 * | (_) | ||  __/ (_) |
+	 *  \__,_|_| \___\\__,_|
 	 *
 	 *
 	 * @param Level   $level

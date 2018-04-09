@@ -49,11 +49,12 @@ class FlagList
 	{
 		if( !isset($data[Region::INDEX_FLAG_LIST]) )
 		{
-			echo "MemberList::fromData() error: flag_list not found.". PHP_EOL;
-			return null;
+			// return null; // user can damage region data.
+
+			$list = '';
 		}
 
-		$list = explode(':', $data[Region::INDEX_FLAG_LIST]);
+		$list = $list ?? explode(':', $data[Region::INDEX_FLAG_LIST]);
 
 		foreach( $list as $index => $flag )
 		{
@@ -80,12 +81,12 @@ class FlagList
 
 
 	/**
-	 *  _______             _    _     _
-	 * |  ___/ | __ _  __ _| |  (_)___| |__
-	 * | |__ | |/ _' |/ _` | |  | / __| __/
-	 * |  _/ | | (_) | (_) | |__| \__ \ |_
-	 * |_|   |_|\__,_|\__, |____|_|___/\__\
-	 *                /___/
+	 *                  _        _
+	 *   _______  _ __ | |____ _(_)_ __   ___ _ __
+	 *  / __/ _ \| '_ \|  _/ _' | | '_ \ / _ \ '_/
+	 * | (_| (_) | | | | || (_) | | | | |  __/ |
+	 *  \___\___/|_| |_|\__\__,_|_|_| |_|\___|_|
+	 *
 	 *
 	 * @param bool[] $list
 	 */

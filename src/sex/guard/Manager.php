@@ -77,12 +77,13 @@ class Manager extends PluginBase
 
 
 	/**
-	 *  __  __
-	 * |  \/  | __ _ _ __   __ _  __ _  ___ _ __
-	 * | |\/| |/ _' | '_ \ / _' |/ _' |/ _ \ '_/
-	 * | |  | | (_) | | | | (_) | (_) |  __/ |
-	 * |_|  |_|\__,_|_| |_|\__,_|\__, |\___|_|
-	 *                           /___/
+	 *
+	 *  _ __ _   __ _ _ __   __ _  __ _  ___ _ __
+	 * | '  ' \ / _' | '_ \ / _' |/ _' |/ _ \ '_/
+	 * | || || | (_) | | | | (_) | (_) |  __/ |
+	 * |_||_||_|\__,_|_| |_|\__,_|\__, |\___|_|
+	 *                            /___/
+	 *
 	 */
 	function onEnable( )
 	{
@@ -101,9 +102,6 @@ class Manager extends PluginBase
 	}
 
 
-	/**
-	 * @todo add SQLiteProvider
-	 */
 	private function loadProvider( )
 	{
 		$this->provider = new SQLiteProvider($this->getDataFolder(). 'data/');
@@ -204,29 +202,45 @@ class Manager extends PluginBase
 
 
 	/**
-	 *     _    ____ ___
-	 *    / \  |  _ \   |
-	 *   / _ \ | |_) | |
-	 *  / ___ \|  __/| |
-	 * /_/   \_\_|  |___|
+	 *              _
+	 *   __ _ _ __ (_)
+	 *  / _' | '_ \| |
+	 * | (_) | (_) | |
+	 *  \__,_| ,__/|_|
+	 *       |_|
 	 *
+	 * NOTE THAT: this function can return Region, Region[], empty list and null.
 	 *
-	 * @param  mixed $type
-	 * @param  bool  $by_name
+	 * CHOOSE WHAT YOU NEED:
+	 * 1. if you need to get region by name,
+	 *    than $type must be string and $by_name = true.
+	 *    function returns Region or null.
+	 * 2. if you need to get region by owner,
+	 *    than $type must be string and $by_name = false.
+	 *    function returns Region[] or empty list.
+	 * 3. if you need to get region by Position,
+	 *    than $type must be Position (or extend Position).
+	 *    function returns Region or null.
+	 * 4. if you need to get all regions in the area,
+	 *    than $type must be Area (or extend Area).
+	 *    function returns Region[] or empty list.
 	 *
-	 * @return mixed|null
+	 * @param  string|Position|Area $type
+	 * @param  bool                 $by_name
+	 *
+	 * @return Region|Region[]|null
 	 *
 	 * @throws InvalidArgumentException
 	 */
 	function getRegion( $type, bool $by_name = false )
 	{
-		if( is_string($type) and $by_name )
+		if( is_string($type) )
 		{
-			return $this->getProvider()->getRegion($type);
-		}
+			if( $by_name )
+			{
+				return $this->getProvider()->getRegion($type);
+			}
 
-		elseif( is_string($type) )
-		{
 			return $this->getProvider()->getRegionByOwner($type);
 		}
 
@@ -245,6 +259,12 @@ class Manager extends PluginBase
 
 
 	/**
+	 * NOTE THAT:
+	 * 1. regions are saved asynchronously.
+	 * 2. if you have a bunch of regions to save,
+	 *    it's better to put them all in a function,
+	 *    than doing it one at a time.
+	 *
 	 * @param Region[] $region
 	 */
 	function setRegion( Region ...$region )
@@ -254,6 +274,12 @@ class Manager extends PluginBase
 
 
 	/**
+	 * NOTE THAT:
+	 * 1. regions are removed asynchronously.
+	 * 2. if you have a bunch of regions to remove,
+	 *    it's better to put all of their names in a function,
+	 *    than doing it one at a time.
+	 *
 	 * @param string[] $name
 	 */
 	function removeRegion( string ...$name )
