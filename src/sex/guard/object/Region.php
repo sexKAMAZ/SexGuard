@@ -47,7 +47,6 @@ class Region extends Area
 	{
 		if( !isset($data[self::INDEX_OWNER]) )
 		{
-			echo "Region::fromData() error: owner not found.". PHP_EOL;
 			return null;
 		}
 
@@ -219,9 +218,7 @@ class Region extends Area
 			self::INDEX_FLAG_LIST   => $this->getFlagList()->toString()
 		];
 
-		$area = parent::toData();
-
-		foreach( $area as $index => $value )
+		foreach( parent::toData() as $index => $value )
 		{
 			$data[$index] = $value;
 		}

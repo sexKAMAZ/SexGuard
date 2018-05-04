@@ -90,7 +90,6 @@ class Area
 	{
 		if( !isset($data[Region::INDEX_LEVEL]) )
 		{
-			echo "Area::fromData() error: level not found.". PHP_EOL;
 			return null;
 		}
 
@@ -98,7 +97,6 @@ class Area
 
 		if( !isset($level) )
 		{
-			echo "Area::fromData() error: level not found.". PHP_EOL;
 			return null;
 		}
 
@@ -108,7 +106,6 @@ class Area
 		{
 			if( !isset($data[$coord]) )
 			{
-				echo "Area::fromData() error: $coord position not found.". PHP_EOL;
 				return null;
 			}
 
@@ -121,7 +118,6 @@ class Area
 		{
 			if( !isset($data[$coord]) )
 			{
-				echo "Area::fromData() error: $coord position not found.". PHP_EOL;
 				return null;
 			}
 

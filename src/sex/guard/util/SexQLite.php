@@ -103,6 +103,7 @@ class SexQLite
 		*/
 
 		$statement->bindValue($param, $value, self::type($value));
+
 		return $statement;
 	}
 

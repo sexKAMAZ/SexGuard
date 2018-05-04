@@ -52,14 +52,9 @@ class RegionDeleteTask extends AsyncTask
 	 */
 	function __construct( string $file, string $sql, string ...$list )
 	{
-		foreach( $list as $index => $name )
-		{
-			$list[$index] = strtolower($name);
-		}
-
 		$this->file        = $file;
 		$this->sql         = $sql;
-		$this->region_list = implode('~', $list);
+		$this->region_list = strtolower(implode('~', $list));
 	}
 
 
