@@ -25,6 +25,13 @@ class EconomyApiAdapter implements EconomyAdapter
 
 
 	/**
+	 *            _             _
+	 *   __ _  __| | __ _ _ __ | |_____ _ __
+	 *  / _' |/ _' |/ _' | '_ \|  _/ _ \ '_/
+	 * | (_) | (_) | (_) | (_) | ||  __/ |
+	 *  \__,_|\__,_|\__,_| ,__/ \__\___|_|
+	 *                   |_|
+	 *
 	 * @param  string $nick
 	 *
 	 * @return int

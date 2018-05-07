@@ -13,15 +13,19 @@
  *         https://t.me/sex_kamaz
  *
  */
-use pocketmine\Player;
-
-
 interface GroupAdapter
 {
 	/**
-	 * @param  Player $player
+	 *            _             _
+	 *   __ _  __| | __ _ _ __ | |_____ _ __
+	 *  / _' |/ _' |/ _' | '_ \|  _/ _ \ '_/
+	 * | (_) | (_) | (_) | (_) | ||  __/ |
+	 *  \__,_|\__,_|\__,_| ,__/ \__\___|_|
+	 *                   |_|
+	 *
+	 * @param  string $nick
 	 *
 	 * @return string
 	 */
-	static function getGroup( Player $player ): string;
+	static function getGroup( string $nick ): string;
 }

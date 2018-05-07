@@ -16,7 +16,6 @@
 use sex\guard\adapter\group\GroupAdapter;
 
 
-use pocketmine\Player;
 use pocketmine\Server;
 
 
@@ -26,11 +25,18 @@ class UniGroupAdapter implements GroupAdapter
 
 
 	/**
-	 * @param  Player $player
+	 *            _             _
+	 *   __ _  __| | __ _ _ __ | |_____ _ __
+	 *  / _' |/ _' |/ _' | '_ \|  _/ _ \ '_/
+	 * | (_) | (_) | (_) | (_) | ||  __/ |
+	 *  \__,_|\__,_|\__,_| ,__/ \__\___|_|
+	 *                   |_|
+	 *
+	 * @param  string $nick
 	 *
 	 * @return string
 	 */
-	static function getGroup( Player $player ): string
+	static function getGroup( string $nick ): string
 	{
 		$plugin = Server::getInstance()->getPluginManager()->getPlugin(self::PLUGIN_NAME);
 
@@ -39,6 +45,6 @@ class UniGroupAdapter implements GroupAdapter
 			return '';
 		}
 
-		return $plugin->getGroup($plugin->getLevel($player->getName()));
+		return $plugin->getGroup($plugin->getLevel($nick));
 	}
 }
