@@ -20,26 +20,26 @@ use sex\guard\provider\Provider;
 use sex\guard\provider\JsonProvider;
 use sex\guard\provider\SQLiteProvider;
 
-//  sex\guard\command\GuardCommand;
-//  sex\guard\command\OldGuardCommand;
+### sex\guard\command\GuardCommand;
+### sex\guard\command\OldGuardCommand;
 
-//  sex\guard\listener\block\BreakListener;
-//  sex\guard\listener\block\PlaceListener;
+### sex\guard\listener\block\BreakListener;
+### sex\guard\listener\block\PlaceListener;
 
-//  sex\guard\listener\entity\DamageListener;
-//  sex\guard\listener\entity\ExplodeListener;
-//  sex\guard\listener\entity\TeleportListener;
-//  sex\guard\listener\entity\BlockChangeListener;
+### sex\guard\listener\entity\DamageListener;
+### sex\guard\listener\entity\ExplodeListener;
+### sex\guard\listener\entity\TeleportListener;
+### sex\guard\listener\entity\BlockChangeListener;
 
-//  sex\guard\listener\player\ChatListener;
-//  sex\guard\listener\player\QuitListener;
-//  sex\guard\listener\player\DropItemListener;
-//  sex\guard\listener\player\InteractListener;
-//  sex\guard\listener\player\BedEnterListener;
-//  sex\guard\listener\player\BucketFillListener;
-//  sex\guard\listener\player\BucketEmptyListener;
+### sex\guard\listener\player\ChatListener;
+### sex\guard\listener\player\QuitListener;
+### sex\guard\listener\player\DropItemListener;
+### sex\guard\listener\player\InteractListener;
+### sex\guard\listener\player\BedEnterListener;
+### sex\guard\listener\player\BucketFillListener;
+### sex\guard\listener\player\BucketEmptyListener;
 
-//  sex\guard\listener\server\PacketRecieveListener;
+### sex\guard\listener\server\PacketRecieveListener;
 
 
 use pocketmine\plugin\PluginBase;
@@ -64,7 +64,7 @@ class Manager extends PluginBase
 	/**
 	 * @return Manager
 	 */
-	static function getInstance( ): self
+	static function getInstance( ): Manager
 	{
 		return self::$instance;
 	}
@@ -104,30 +104,30 @@ class Manager extends PluginBase
 
 	private function loadProvider( )
 	{
-		$this->provider = new SQLiteProvider($this->getDataFolder(). 'data/');
+		$this->provider = new JsonProvider($this->getDataFolder(). 'data/');
 	}
 
 
 	private function loadListener( )
 	{
 		$list = [
-			// new BreakListener($this),
-			// new PlaceListener($this),
+			### BreakListener($this),
+			### PlaceListener($this),
 
-			// new DamageListener($this),
-			// new ExplodeListener($this),
-			// new TeleportListener($this),
-			// new BlockChangeListener($this),
+			### DamageListener($this),
+			### ExplodeListener($this),
+			### TeleportListener($this),
+			### BlockChangeListener($this),
 
-			// new ChatListener($this),
-			// new QuitListener($this),
-			// new DropItemListener($this),
-			// new InteractListener($this),
-			// new BedEnterListener($this),
-			// new BucketFillListener($this),
-			// new BucketEmptyListener($this),
+			### ChatListener($this),
+			### QuitListener($this),
+			### DropItemListener($this),
+			### InteractListener($this),
+			### BedEnterListener($this),
+			### BucketFillListener($this),
+			### BucketEmptyListener($this),
 
-			// new PacketRecieveListener($this)
+			### PacketRecieveListener($this)
 		];
 
 		foreach( $list as $listener )
@@ -142,14 +142,14 @@ class Manager extends PluginBase
 		try
 		{
 			$list = [
-				// new GuardCommand($this)
+				### GuardCommand($this)
 			];
 		}
 
 		catch( Exception $exception )
 		{
 			$list = [
-				// new OldGuardCommand($this)
+				### OldGuardCommand($this)
 			];
 		}
 
@@ -174,14 +174,14 @@ class Manager extends PluginBase
 		try
 		{
 			$list = [
-				// [ new PositionCheckTask($this), 30 ]
+				# new PositionCheckTask($this), 30 ]
 			];
 		}
 
 		catch( Exception $exception )
 		{
 			$list = [
-				// [ new OldPositionCheckTask($this), 30 ]
+				# new OldPositionCheckTask($this), 30 ]
 			];
 		}
 

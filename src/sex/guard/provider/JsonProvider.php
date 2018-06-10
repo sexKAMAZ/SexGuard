@@ -13,10 +13,11 @@
  *         https://t.me/sex_kamaz
  *
  */
+use sex\guard\provider\Provider;
+
 use sex\guard\object\Area;
 use sex\guard\object\Region;
-
-use sex\guard\provider\Provider;
+use sex\guard\object\container\SortedRegionList;
 
 
 use pocketmine\level\Position;
@@ -34,9 +35,9 @@ class JsonProvider implements Provider
 	private $region_data;
 
 	/**
-	 * @var Region[][]
+	 * @var SortedRegionList
 	 */
-	private $region_list = [];
+	private $region_list;
 
 
 	/**
@@ -74,7 +75,7 @@ class JsonProvider implements Provider
 			$list[] = $region;
 		}
 
-		$this->setRegion(...$list);
+		$this->region_list = new SortedRegionList(...$list);
 	}
 
 
@@ -85,25 +86,15 @@ class JsonProvider implements Provider
 	 */
 	function getRegion( string $name )
 	{
-		$name = strtolower($name);
+		$region = $this->getRegionList()->get($name);
 
-		foreach( $this->region_list as $level => $list_by_level )
+		if( isset($region) )
 		{
-			foreach( $list_by_level as $side => $list_by_side )
-			{
-				foreach( $list_by_side as $region )
-				{
-					if( $region->getName() != $name )
-					{
-						continue;
-					}
-
-					return $region;
-				}
-			}
+			return $region;
 		}
 
-		$data = $this->region_data->get($name);
+		$name = strtolower($name);
+		$data = $this->getRegionData()->get($name);
 
 		if( !$data )
 		{
@@ -129,31 +120,7 @@ class JsonProvider implements Provider
 	 */
 	function getRegionByPlayer( string $nick ): array
 	{
-		$nick   = strtolower($nick);
-		$result = [];
-
-		foreach( $this->region_list as $level => $list_by_level )
-		{
-			foreach( $list_by_level as $side => $list_by_side )
-			{
-				foreach( $list_by_side as $region )
-				{
-					if( $nick != $region->getOwner() )
-					{
-						continue;
-					}
-
-					if( !$region->getMemberList()->exists($nick) )
-					{
-						continue;
-					}
-
-					$result[] = $region;
-				}
-			}
-		}
-
-		return $result;
+		return $this->getRegionList()->getByPlayer($nick);
 	}
 
 
@@ -164,33 +131,7 @@ class JsonProvider implements Provider
 	 */
 	function getRegionByPosition( Position $position )
 	{
-		$level = $position->getLevel()->getName();
-		$side  = Region::getLevelSideByVector($position);
-		$list  = $this->region_list[$level][$side];
-
-		if( !isset($list) )
-		{
-			return null;
-		}
-
-		for( end($list), $i = key($list), reset($list); $i >= 0; $i-- )
-		{
-			if( !isset($list[$i]) )
-			{
-				continue;
-			}
-
-			$region = $list[$i];
-
-			if( !$region->isVectorInside($position) )
-			{
-				continue;
-			}
-
-			return $region;
-		}
-
-		return null;
+		return $this->getRegionList()->getByPosition($position);
 	}
 
 
@@ -201,35 +142,7 @@ class JsonProvider implements Provider
 	 */
 	function getRegionByArea( Area $area ): array
 	{
-		$level = $area->getLevel()->getName();
-		$side  = $area->getLevelSide();
-		$list  = $this->region_list[$level][$side];
-
-		if( !isset($list) )
-		{
-			return null;
-		}
-
-		$result = [];
-
-		for( end($list), $i = key($list), reset($list); $i >= 0; $i-- )
-		{
-			if( !isset($list[$i]) )
-			{
-				continue;
-			}
-
-			$region = $list[$i];
-
-			if( !$area->intersectsWith($region) )
-			{
-				continue;
-			}
-
-			$result[] = $region;
-		}
-
-		return $result;
+		return $this->getRegionList()->getByArea($area);
 	}
 
 
@@ -242,33 +155,11 @@ class JsonProvider implements Provider
 	{
 		foreach( $list as $region )
 		{
-			$name = $region->getName();
-
-			foreach( $this->region_list as $level => $list_by_level )
-			{
-				foreach( $list_by_level as $side => $list_by_side )
-				{
-					foreach( $list_by_side as $index => $old_region )
-					{
-						if( $old_region->getName() != $name )
-						{
-							continue;
-						}
-
-						unset($this->region_list[$level][$side][$index]);
-					}
-				}
-			}
-
-			$level = $region->getLevel()->getName();
-			$side  = $region->getLevelSide();
-
-			$this->region_list[$level][$side][] = $region;
-
-			$this->region_data->set($name, $region->toData());
+			$this->getRegionList()->set($region);
+			$this->getRegionData()->set($region->getName(), $region->toData());
 		}
 
-		$this->region_data->save(true);
+		$this->getRegionData()->save(true);
 		return $this;
 	}
 
@@ -284,30 +175,29 @@ class JsonProvider implements Provider
 		{
 			$name = strtolower($name);
 
-			foreach( $this->region_list as $level => $list_by_level )
-			{
-				foreach( $list_by_level as $side => $list_by_side )
-				{
-					foreach( $list_by_side as $index => $region )
-					{
-						if( $region->getName() != $name )
-						{
-							continue;
-						}
-
-						unset($this->region_list[$level][$side][$index]);
-
-						/* still need this?
-						$this->region_list[$level][$side] = array_values($this->region_list[$level][$side]);
-						*/
-					}
-				}
-			}
-
-			$this->region_data->remove($name);
+			$this->getRegionList()->remove($name);
+			$this->getRegionData()->remove($name);
 		}
 
-		$this->region_data->save(true);
+		$this->getRegionData()->save(true);
 		return $this;
+	}
+
+
+	/**
+	 * @return Config
+	 */
+	private function getRegionData( ): Config
+	{
+		return $this->region_data;
+	}
+
+
+	/**
+	 * @return SortedRegionList
+	 */
+	private function getRegionList( ): SortedRegionList
+	{
+		return $this->region_list;
 	}
 }
