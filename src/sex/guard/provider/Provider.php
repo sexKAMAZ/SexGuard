@@ -41,11 +41,11 @@ interface Provider
 
 
 	/**
-	 * @param  string $owner
+	 * @param  string $nick
 	 *
 	 * @return Region[]
 	 */
-	function getRegionByOwner( string $owner ): array;
+	function getRegionByPlayer( string $nick ): array;
 
 
 	/**

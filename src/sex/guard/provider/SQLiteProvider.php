@@ -73,10 +73,12 @@ class SQLiteProvider implements Provider
 	/**
 	 * @var string
 	 */
-	private $region_select_by_owner = "
+	private $region_select_by_player = "
 		SELECT * FROM `INDEX_TABLE` WHERE
 		(
-			`INDEX_OWNER` = :INDEX_OWNER
+			`INDEX_OWNER` = :INDEX_OWNER OR
+
+			`INDEX_MEMBER_LIST` LIKE '%:INDEX_MEMBER_LIST%'
 		)
 	";
 
@@ -196,7 +198,7 @@ class SQLiteProvider implements Provider
 		$this->region_data = SexQLite::connect($this->region_file);
 
 		$this->region_select_by_name     = self::buildQuery($this->region_select_by_name);
-		$this->region_select_by_owner    = self::buildQuery($this->region_select_by_owner);
+		$this->region_select_by_player   = self::buildQuery($this->region_select_by_player);
 		$this->region_select_by_position = self::buildQuery($this->region_select_by_position);
 		$this->region_select_by_area     = self::buildQuery($this->region_select_by_area);
 		$this->region_insert             = self::buildQuery($this->region_insert);
@@ -227,23 +229,41 @@ class SQLiteProvider implements Provider
 
 
 	/**
-	 * @param  string $owner
+	 * @param  string $nick
 	 *
 	 * @return Region[]
 	 */
-	function getRegionByOwner( string $owner ): array
+	function getRegionByPlayer( string $nick ): array
 	{
-		$owner = strtolower($owner);
+		$nick = strtolower($nick);
 
-		$statement = SexQLite::prepare($this->region_data, $this->region_select_by_owner);
-		$statement = SexQLite::bind($statement, ':'. Region::INDEX_OWNER, $owner);
+		$statement = SexQLite::prepare($this->region_data, $this->region_select_by_player);
+		$statement = SexQLite::bind($statement, ':'. Region::INDEX_OWNER, $nick);
+		$statement = SexQLite::bind($statement, ':'. Region::INDEX_MEMBER_LIST, $nick);
 
 		$result = SexQLite::execute($statement);
 		$list   = [];
 
 		while( count($data = SexQLite::fetch($result)) > 0 )
 		{
-			$list[] = Region::make($data[Region::INDEX_NAME], $data);
+			$region = Region::make($data[Region::INDEX_NAME], $data);
+
+			if( !isset($region) )
+			{
+				continue;
+			}
+
+			if( $nick != $region->getOwner() )
+			{
+				continue;
+			}
+
+			if( !$region->getMemberList()->exists($nick) )
+			{
+				continue;
+			}
+
+			$list[] = $region;
 		}
 
 		return $list;
@@ -299,7 +319,14 @@ class SQLiteProvider implements Provider
 
 		while( count($data = SexQLite::fetch($result)) > 0 )
 		{
-			$list[] = Region::make($data[Region::INDEX_NAME], $data);
+			$region = Region::make($data[Region::INDEX_NAME], $data);
+
+			if( !isset($region) )
+			{
+				continue;
+			}
+
+			$list[] = $region;
 		}
 
 		return $list;

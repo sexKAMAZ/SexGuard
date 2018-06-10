@@ -123,13 +123,13 @@ class JsonProvider implements Provider
 
 
 	/**
-	 * @param  string $owner
+	 * @param  string $nick
 	 *
 	 * @return Region[]
 	 */
-	function getRegionByOwner( string $owner ): array
+	function getRegionByNick( string $nick ): array
 	{
-		$owner  = strtolower($owner);
+		$nick   = strtolower($nick);
 		$result = [];
 
 		foreach( $this->region_list as $level => $list_by_level )
@@ -138,7 +138,12 @@ class JsonProvider implements Provider
 			{
 				foreach( $list_by_side as $region )
 				{
-					if( $region->getOwner() != $owner )
+					if( $nick != $region->getOwner() )
+					{
+						continue;
+					}
+
+					if( !$region->getMemberList()->exists($nick) )
 					{
 						continue;
 					}

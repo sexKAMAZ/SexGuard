@@ -108,7 +108,7 @@ class MemberList
 	{
 		$nick = strtolower($nick);
 
-		return array_search($nick, $this->list) ? true : false;
+		return in_array($nick, $this->list);
 	}
 
 

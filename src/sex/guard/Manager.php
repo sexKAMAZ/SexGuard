@@ -213,10 +213,10 @@ class Manager extends PluginBase
 	 *
 	 * CHOOSE WHAT YOU NEED:
 	 * 1. if you need to get region by name,
-	 *    than $type must be region's name and $by_name = true.
+	 *    than $type must be region's name and $by_player = false.
 	 *    function returns Region or null.
-	 * 2. if you need to get region by owner,
-	 *    than $type must be owner's name and $by_name = false.
+	 * 2. if you need to get region list by owner/member,
+	 *    than $type must be owner's/member's name and $by_player = true.
 	 *    function returns Region[] or empty list.
 	 * 3. if you need to get region by Position,
 	 *    than $type must be Position (or extend Position).
@@ -226,22 +226,22 @@ class Manager extends PluginBase
 	 *    function returns Region[] or empty list.
 	 *
 	 * @param  string|Position|Area $type
-	 * @param  bool                 $by_name
+	 * @param  bool                 $by_player
 	 *
 	 * @return Region|Region[]|null
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	function getRegion( $type, bool $by_name = false )
+	function getRegion( $type, bool $by_player = false )
 	{
 		if( is_string($type) )
 		{
-			if( $by_name )
+			if( $by_player )
 			{
-				return $this->getProvider()->getRegion($type);
+				return $this->getProvider()->getRegionByPlayer($type);
 			}
 
-			return $this->getProvider()->getRegionByOwner($type);
+			return $this->getProvider()->getRegion($type);
 		}
 
 		elseif( $type instanceof Position )
