@@ -127,7 +127,7 @@ class JsonProvider implements Provider
 	 *
 	 * @return Region[]
 	 */
-	function getRegionByNick( string $nick ): array
+	function getRegionByPlayer( string $nick ): array
 	{
 		$nick   = strtolower($nick);
 		$result = [];
