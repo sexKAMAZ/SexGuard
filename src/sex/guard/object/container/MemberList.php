@@ -18,21 +18,33 @@ use sex\guard\object\Region;
 
 class MemberList
 {
+	const DELIMITER = ':';
+
+
 	/**
 	 * @param  mixed[]
 	 *
-	 * @return MemberList|null
+	 * @return MemberList
 	 */
-	static function fromData( array $data )
+	static function fromData( array $data ): MemberList
 	{
 		if( !isset($data[Region::INDEX_MEMBER_LIST]) )
 		{
-			// return null; // user can damage region data.
-
 			$list = '';
 		}
 
-		return new MemberList(...explode(':', $list ?? $data[Region::INDEX_MEMBER_LIST]));
+		return self::fromString($list ?? $data[Region::INDEX_MEMBER_LIST]);
+	}
+
+
+	/**
+	 * @param  string
+	 *
+	 * @return MemberList
+	 */
+	static function fromString( string $string ): MemberList
+	{
+		return new MemberList(...explode(self::DELIMITER, $string));
 	}
 
 
@@ -43,11 +55,11 @@ class MemberList
 
 
 	/**
-	 *                  _        _
-	 *   _______  _ __ | |____ _(_)_ __   ___ _ __
-	 *  / __/ _ \| '_ \|  _/ _' | | '_ \ / _ \ '_/
-	 * | (_| (_) | | | | || (_) | | | | |  __/ |
-	 *  \___\___/|_| |_|\__\__,_|_|_| |_|\___|_|
+	 *                   _        _
+	 *   ___  ___  _ __ | |____ _(_)_ __   ___ _ __
+	 *  / __\/ _ \| '_ \|  _/ _' | | '_ \ / _ \ '_/
+	 * | (__| (_) | | | | || (_) | | | | |  __/ |
+	 *  \___/\___/|_| |_|\__\__,_|_|_| |_|\___|_|
 	 *
 	 *
 	 * @param string[] $list
@@ -117,6 +129,6 @@ class MemberList
 	 */
 	function toString( ): string
 	{
-		return implode(':', $this->list);
+		return implode(self::DELIMITER, $this->list);
 	}
 }

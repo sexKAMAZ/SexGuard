@@ -115,6 +115,8 @@ class RegionList
 	 */
 	function exists( string $name ): bool
 	{
+		$name = strtolower($name);
+
 		return isset($this->list[$name]);
 	}
 }

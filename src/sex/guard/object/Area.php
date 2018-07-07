@@ -255,7 +255,7 @@ class Area
 		{
 			$y = [ 0, 1 ];
 		}
-		
+
 		return ($x[1] - $x[0]) * ($y[1] - $y[0]) * ($z[1] - $z[0]);
 	}
 
@@ -273,19 +273,19 @@ class Area
 		{
 			$x = mt_rand($min->getX(), $max->getX());
 			$z = mt_rand($min->getZ(), $max->getZ());
-			
+
 			if( !$level->isChunkLoaded($x, $z) )
 			{
 				$level->loadChunk($x, $z);
 			}
-			
+
 			$position = $level->getSafeSpawn(new Vector3($x, $max->getY(), $z));
-			
+
 			if( !$position )
 			{
 				continue; // chunk not loaded.
 			}
-			
+
 			return $position;
 		}
 	}
