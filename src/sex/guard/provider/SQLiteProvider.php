@@ -78,7 +78,7 @@ class SQLiteProvider implements Provider
 		(
 			`INDEX_OWNER` = :INDEX_OWNER OR
 
-			`INDEX_MEMBER_LIST` LIKE '%:INDEX_MEMBER_LIST%'
+			`INDEX_MEMBER_LIST` LIKE :INDEX_MEMBER_LIST
 		)
 	";
 
@@ -221,8 +221,8 @@ class SQLiteProvider implements Provider
 		$statement = SexQLite::prepare($this->region_data, $this->region_select_by_name);
 		$statement = SexQLite::bind($statement, ':'. Region::INDEX_NAME, $name);
 
-		$data = SexQLite::execute($statement);
-		$data = SexQLite::fetch($data);
+		$result = SexQLite::execute($statement);
+		$data   = SexQLite::fetch($result);
 
 		return Region::make($name, $data);
 	}
@@ -239,12 +239,12 @@ class SQLiteProvider implements Provider
 
 		$statement = SexQLite::prepare($this->region_data, $this->region_select_by_player);
 		$statement = SexQLite::bind($statement, ':'. Region::INDEX_OWNER, $nick);
-		$statement = SexQLite::bind($statement, ':'. Region::INDEX_MEMBER_LIST, $nick);
+		$statement = SexQLite::bind($statement, ':'. Region::INDEX_MEMBER_LIST, "%$nick%");
 
 		$result = SexQLite::execute($statement);
 		$list   = [];
 
-		while( count($data = SexQLite::fetch($result)) > 0 )
+		while( !empty($data = SexQLite::fetch($result)) )
 		{
 			$region = Region::make($data[Region::INDEX_NAME], $data);
 
@@ -253,12 +253,7 @@ class SQLiteProvider implements Provider
 				continue;
 			}
 
-			if( $nick != $region->getOwner() )
-			{
-				continue;
-			}
-
-			if( !$region->getMemberList()->exists($nick) )
+			if( $nick != $region->getOwner() and !$region->getMemberList()->exists($nick) )
 			{
 				continue;
 			}
@@ -288,7 +283,7 @@ class SQLiteProvider implements Provider
 		$result = SexQLite::execute($statement);
 		$list   = [];
 
-		while( count($data = SexQLite::fetch($result)) > 0 )
+		while( !empty($data = SexQLite::fetch($result)) )
 		{
 			$list[] = $data;
 		}
@@ -317,7 +312,7 @@ class SQLiteProvider implements Provider
 		$result = SexQLite::execute($statement);
 		$list   = [];
 
-		while( count($data = SexQLite::fetch($result)) > 0 )
+		while( !empty($data = SexQLite::fetch($result)) )
 		{
 			$region = Region::make($data[Region::INDEX_NAME], $data);
 

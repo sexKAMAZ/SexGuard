@@ -111,12 +111,12 @@ class SortedRegionList extends RegionList
 	{
 		if( !isset($this->position_name_list[$level]) )
 		{
-			return null;
+			return [];
 		}
 
 		if( !isset($this->position_name_list[$level][$side]) )
 		{
-			return null;
+			return [];
 		}
 
 		$list = $this->position_name_list[$level][$side];
@@ -148,6 +148,11 @@ class SortedRegionList extends RegionList
 		$level = $position->getLevel()->getName();
 		$side  = Region::getLevelSideByVector($position);
 		$list  = $this->getByLevelSide($level, $side);
+
+		if( empty($list) )
+		{
+			return null;
+		}
 
 		for( end($list), $i = key($list), reset($list); $i >= 0; $i-- )
 		{

@@ -130,6 +130,8 @@ class SexQLite
 
 		if( !$array )
 		{
+			$result->finalize();
+
 			return [];
 		}
 
