@@ -222,9 +222,21 @@ class SQLiteProvider implements Provider
 		$statement = SexQLite::bind($statement, ':'. Region::INDEX_NAME, $name);
 
 		$result = SexQLite::execute($statement);
-		$data   = SexQLite::fetch($result);
+		$target = [];
 
-		return Region::make($name, $data);
+		while( true )
+		{
+			$data = SexQLite::fetch($result);
+
+			if( empty($data) )
+			{
+				break;
+			}
+
+			$target = $data;
+		}
+
+		return Region::make($name, $target);
 	}
 
 
@@ -244,8 +256,15 @@ class SQLiteProvider implements Provider
 		$result = SexQLite::execute($statement);
 		$list   = [];
 
-		while( !empty($data = SexQLite::fetch($result)) )
+		while( true )
 		{
+			$data = SexQLite::fetch($result);
+
+			if( empty($data) )
+			{
+				break;
+			}
+
 			$region = Region::make($data[Region::INDEX_NAME], $data);
 
 			if( !isset($region) )
@@ -283,8 +302,15 @@ class SQLiteProvider implements Provider
 		$result = SexQLite::execute($statement);
 		$list   = [];
 
-		while( !empty($data = SexQLite::fetch($result)) )
+		while( true )
 		{
+			$data = SexQLite::fetch($result);
+
+			if( empty($data) )
+			{
+				break;
+			}
+
 			$list[] = $data;
 		}
 
@@ -312,8 +338,15 @@ class SQLiteProvider implements Provider
 		$result = SexQLite::execute($statement);
 		$list   = [];
 
-		while( !empty($data = SexQLite::fetch($result)) )
+		while( true )
 		{
+			$data = SexQLite::fetch($result);
+
+			if( empty($data) )
+			{
+				break;
+			}
+
 			$region = Region::make($data[Region::INDEX_NAME], $data);
 
 			if( !isset($region) )

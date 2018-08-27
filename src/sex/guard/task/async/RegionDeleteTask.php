@@ -54,19 +54,19 @@ class RegionDeleteTask extends AsyncTask
 	{
 		$this->file        = $file;
 		$this->sql         = $sql;
-		$this->region_list = strtolower(implode('~', $list));
+		$this->region_list = strtolower(serialize($list));
 	}
 
 
 	function onRun( )
 	{
-		$list = explode('~', $this->region_list);
+		$list = unserialize($this->region_list);
 		$link = SexQLite::connect($this->file);
 
 		foreach( $list as $name )
 		{
 			$statement = SexQLite::prepare($link, $this->sql);
-			$statement = SexQLite::bind($statement, ':'. Region::INDEX_NAME, $name);
+			$statement = SexQLite::bind($statement, ':'. Region::INDEX_NAME, strtolower($name));
 
 			SexQLite::execute($statement);
 		}
