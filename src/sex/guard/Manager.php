@@ -47,7 +47,6 @@ use pocketmine\level\Position;
 
 
 use InvalidArgumentException;
-use Exception;
 use Throwable;
 
 
@@ -176,7 +175,7 @@ class Manager extends PluginBase
 			];
 		}
 
-		catch( Exception $exception )
+		catch( Throwable $exception )
 		{
 			$list = [
 				### OldGuardCommand($this)
@@ -203,21 +202,12 @@ class Manager extends PluginBase
 	{
 		try
 		{
-			$list = [
-				# new PositionCheckTask($this), 30 ]
-			];
+			#this->position_check_task = new PositionCheckTask($this);
 		}
 
-		catch( Exception $exception )
+		catch( Throwable $exception )
 		{
-			$list = [
-				# new OldPositionCheckTask($this), 30 ]
-			];
-		}
-
-		foreach( $list as $task )
-		{
-			$this->getServer()->getScheduler()->scheduleRepeatingTask(...$task);
+			#this->position_check_task = new OldPositionCheckTask($this);
 		}
 	}
 

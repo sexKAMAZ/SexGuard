@@ -279,14 +279,7 @@ class Area
 				$level->loadChunk($x, $z);
 			}
 
-			$position = $level->getSafeSpawn(new Vector3($x, $max->getY(), $z));
-
-			if( !$position )
-			{
-				continue; // chunk not loaded.
-			}
-
-			return $position;
+			return $level->getSafeSpawn(new Vector3($x, $max->getY(), $z));
 		}
 	}
 

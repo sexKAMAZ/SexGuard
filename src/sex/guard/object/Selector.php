@@ -16,6 +16,9 @@
 use pocketmine\level\Position;
 
 
+use InvalidArgumentException;
+
+
 class Selector
 {
 	/**
@@ -46,6 +49,11 @@ class Selector
 	 */
 	function __construct( string $nick )
 	{
+		if( empty($nick) )
+		{
+			throw new InvalidArgumentException('Player\'s name cannot be empty!');
+		}
+
 		$this->nick = strtolower($nick);
 	}
 

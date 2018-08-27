@@ -22,6 +22,9 @@ use pocketmine\math\Vector3;
 use pocketmine\level\Level;
 
 
+use InvalidArgumentException;
+
+
 class Region extends Area
 {
 	const INDEX_NAME        = 'name';
@@ -45,7 +48,12 @@ class Region extends Area
 	 */
 	static function make( string $name, array $data )
 	{
-		if( !isset($data[self::INDEX_OWNER]) )
+		if( empty($name) )
+		{
+			return null;
+		}
+
+		if( !isset($data[self::INDEX_OWNER]) or empty($data[self::INDEX_OWNER]) )
 		{
 			return null;
 		}
@@ -138,8 +146,9 @@ class Region extends Area
 	) {
 		parent::__construct($level, $min, $max);
 
-		$this->name        = strtolower($name);
-		$this->owner       = strtolower($owner);
+		$this->setName($name);
+		$this->setOwner($owner);
+
 		$this->member_list = $member;
 		$this->flag_list   = $flag;
 	}
@@ -161,6 +170,11 @@ class Region extends Area
 	 */
 	function setName( string $name ): Region
 	{
+		if( empty($name) )
+		{
+			throw new InvalidArgumentException('Region\'s name cannot be empty!');
+		}
+
 		$this->name = strtolower($name);
 
 		return $this;
@@ -183,6 +197,11 @@ class Region extends Area
 	 */
 	function setOwner( string $nick ): Region
 	{
+		if( empty($nick) )
+		{
+			throw new InvalidArgumentException('Owner\'s name cannot be empty!');
+		}
+
 		$this->owner = strtolower($nick);
 
 		return $this;
