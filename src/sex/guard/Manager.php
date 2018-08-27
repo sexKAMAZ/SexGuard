@@ -122,7 +122,7 @@ class Manager extends PluginBase
 	{
 		try
 		{
-			$this->getServer()->getScheduler();
+			$this->getScheduler();
 		}
 
 		catch( Throwable $exception )
