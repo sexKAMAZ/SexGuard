@@ -54,7 +54,7 @@ class JsonProvider implements Provider
 	{
 		if( !is_dir($location) )
 		{
-			@mkdir($location);
+			mkdir($location, 0777, true);
 		}
 
 		$this->region_data = new Config($location. self::FILENAME);

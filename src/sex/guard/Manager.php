@@ -46,8 +46,9 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\level\Position;
 
 
-use Exception;
 use InvalidArgumentException;
+use Exception;
+use Throwable;
 
 
 class Manager extends PluginBase
@@ -58,7 +59,12 @@ class Manager extends PluginBase
 	/**
 	 * @var Manager
 	 */
-	static $instance = null;
+	private static $instance = null;
+
+	/**
+	 * @var bool
+	 */
+	private static $old_scheduler = false;
 
 
 	/**
@@ -67,6 +73,15 @@ class Manager extends PluginBase
 	static function getInstance( ): Manager
 	{
 		return self::$instance;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	static function isOldScheduler( ): bool
+	{
+		return self::$old_scheduler;
 	}
 
 
@@ -88,6 +103,7 @@ class Manager extends PluginBase
 	function onEnable( )
 	{
 		$this->loadInstance();
+		$this->loadScheduler();
 
 		$this->loadProvider();
 		$this->loadListener();
@@ -99,6 +115,20 @@ class Manager extends PluginBase
 	private function loadInstance( )
 	{
 		self::$instance = $this;
+	}
+
+
+	private function loadScheduler( )
+	{
+		try
+		{
+			$this->getServer()->getScheduler();
+		}
+
+		catch( Throwable $exception )
+		{
+			self::$old_scheduler = true;
+		}
 	}
 
 

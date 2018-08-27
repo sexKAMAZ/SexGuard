@@ -13,6 +13,8 @@
  *         https://t.me/sex_kamaz
  *
  */
+use sex\guard\Manager;
+
 use sex\guard\object\Area;
 use sex\guard\object\Region;
 
@@ -191,7 +193,7 @@ class SQLiteProvider implements Provider
 	{
 		if( !is_dir($location) )
 		{
-			@mkdir($location);
+			mkdir($location, 0777, true);
 		}
 
 		$this->region_file = $location. self::FILENAME;
@@ -370,7 +372,13 @@ class SQLiteProvider implements Provider
 	{
 		$task = new RegionInsertTask($this->region_file, $this->region_insert, ...$list);
 
-		Server::getInstance()->getScheduler()->scheduleAsyncTask($task);
+		if( Manager::isOldScheduler() )
+		{
+			Server::getInstance()->getScheduler()->scheduleAsyncTask($task);
+			return $this;
+		}
+
+		Server::getInstance()->getAsyncPool()->submitTask($task);
 		return $this;
 	}
 
@@ -384,7 +392,13 @@ class SQLiteProvider implements Provider
 	{
 		$task = new RegionDeleteTask($this->region_file, $this->region_delete, ...$list);
 
-		Server::getInstance()->getScheduler()->scheduleAsyncTask($task);
+		if( Manager::isOldScheduler() )
+		{
+			Server::getInstance()->getScheduler()->scheduleAsyncTask($task);
+			return $this;
+		}
+
+		Server::getInstance()->getAsyncPool()->submitTask($task);
 		return $this;
 	}
 }
