@@ -60,11 +60,6 @@ class Manager extends PluginBase
 	 */
 	private static $instance = null;
 
-	/**
-	 * @var bool
-	 */
-	private static $old_scheduler = false;
-
 
 	/**
 	 * @return Manager
@@ -72,15 +67,6 @@ class Manager extends PluginBase
 	static function getInstance( ): Manager
 	{
 		return self::$instance;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	static function isOldScheduler( ): bool
-	{
-		return self::$old_scheduler;
 	}
 
 
@@ -102,7 +88,6 @@ class Manager extends PluginBase
 	function onEnable( )
 	{
 		$this->loadInstance();
-		$this->loadScheduler();
 
 		$this->loadProvider();
 		$this->loadListener();
@@ -114,20 +99,6 @@ class Manager extends PluginBase
 	private function loadInstance( )
 	{
 		self::$instance = $this;
-	}
-
-
-	private function loadScheduler( )
-	{
-		try
-		{
-			$this->getScheduler();
-		}
-
-		catch( Throwable $exception )
-		{
-			self::$old_scheduler = true;
-		}
 	}
 
 

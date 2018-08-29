@@ -13,13 +13,13 @@
  *         https://t.me/sex_kamaz
  *
  */
-use sex\guard\Manager;
-
 use sex\guard\object\Area;
 use sex\guard\object\Region;
 
 use sex\guard\util\SexQLite;
 use sex\guard\provider\Provider;
+
+use sex\guard\util\Multiversion;
 
 use sex\guard\task\async\RegionDeleteTask;
 use sex\guard\task\async\RegionInsertTask;
@@ -372,13 +372,7 @@ class SQLiteProvider implements Provider
 	{
 		$task = new RegionInsertTask($this->region_file, $this->region_insert, ...$list);
 
-		if( Manager::isOldScheduler() )
-		{
-			Server::getInstance()->getScheduler()->scheduleAsyncTask($task);
-			return $this;
-		}
-
-		Server::getInstance()->getAsyncPool()->submitTask($task);
+		Multiversion::scheduleAsyncTask($task);
 		return $this;
 	}
 
@@ -392,13 +386,7 @@ class SQLiteProvider implements Provider
 	{
 		$task = new RegionDeleteTask($this->region_file, $this->region_delete, ...$list);
 
-		if( Manager::isOldScheduler() )
-		{
-			Server::getInstance()->getScheduler()->scheduleAsyncTask($task);
-			return $this;
-		}
-
-		Server::getInstance()->getAsyncPool()->submitTask($task);
+		Multiversion::scheduleAsyncTask($task);
 		return $this;
 	}
 }

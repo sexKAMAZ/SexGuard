@@ -269,18 +269,15 @@ class Area
 		$min   = $this->getMinVector();
 		$max   = $this->getMaxVector();
 
-		while( true )
+		$x = mt_rand($min->getX(), $max->getX());
+		$z = mt_rand($min->getZ(), $max->getZ());
+
+		if( !$level->isChunkLoaded($x, $z) )
 		{
-			$x = mt_rand($min->getX(), $max->getX());
-			$z = mt_rand($min->getZ(), $max->getZ());
-
-			if( !$level->isChunkLoaded($x, $z) )
-			{
-				$level->loadChunk($x, $z);
-			}
-
-			return $level->getSafeSpawn(new Vector3($x, $max->getY(), $z));
+			$level->loadChunk($x, $z);
 		}
+
+		return $level->getSafeSpawn(new Vector3($x, $max->getY(), $z));
 	}
 
 
